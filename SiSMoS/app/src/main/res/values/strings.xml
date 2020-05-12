@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SiSMoS</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="register">Registrarse</string>
+    <string name="login">Entrar</string>
+    <string name="password">Contraseña</string>
+    <string name="email">Correo electrónico</string>
+    <string name="noAccountQuestion">¿No tiene una cuenta?</string>
+    <string name="firstLineTitle">Sistema de Alerta de</string>
+    <string name="secondLineTable">Movimientos Sísmicos</string>
+    <string name="logo">Logo</string>
+</resources>
