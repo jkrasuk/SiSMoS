@@ -1,7 +1,7 @@
 package com.jk.sismos.main.data;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,18 +34,26 @@ public class LoginActivity extends AppCompatActivity {
 
         mAPIService = ApiUtils.getAPIService();
 
+//        submitBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String trimmedEmail = email.getText().toString().trim();
+//                String trimmedPassword = password.getText().toString().trim();
+//
+//                if (!TextUtils.isEmpty(trimmedEmail) && !TextUtils.isEmpty(trimmedPassword)) {
+//                    sendLogin(trimmedEmail, trimmedPassword);
+//                }
+//            }
+//        });
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String trimmedEmail = email.getText().toString().trim();
-                String trimmedPassword = password.getText().toString().trim();
-
-                if (!TextUtils.isEmpty(trimmedEmail) && !TextUtils.isEmpty(trimmedPassword)) {
-                    sendLogin(trimmedEmail, trimmedPassword);
-                }
+                Intent intent = new Intent(LoginActivity.this, OfficialHistoryActivity.class);
+                startActivity(intent);
             }
         });
     }
+
 
     public void sendLogin(String email, String password) {
         mAPIService.login(email, password).enqueue(new Callback<UserPost>() {
