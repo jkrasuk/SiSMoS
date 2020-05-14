@@ -37,12 +37,11 @@ public class LoginActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = email.getText().toString().trim();
-                String body = password.getText().toString().trim();
-                Log.d(TAG, title);
-                Log.d(TAG, body);
-                if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(body)) {
-                    sendLogin(title, body);
+                String trimmedEmail = email.getText().toString().trim();
+                String trimmedPassword = password.getText().toString().trim();
+
+                if (!TextUtils.isEmpty(trimmedEmail) && !TextUtils.isEmpty(trimmedPassword)) {
+                    sendLogin(trimmedEmail, trimmedPassword);
                 }
             }
         });
@@ -54,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<UserPost> call, Response<UserPost> response) {
                 if (response.isSuccessful()) {
                     showResponse(response.body().toString());
-                    Log.i(TAG, "post submitted to API." + response.body().toString());
-                } else{
+                    Log.i(TAG, "Request enviado." + response.body().toString());
+                } else {
 
                     Log.i(TAG, "Ocurrió un error.");
                 }
@@ -63,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<UserPost> call, Throwable t) {
-                Log.e(TAG, "Unable to submit post to API.");
+                Log.e(TAG, "Error al enviar el request.");
 
             }
         });

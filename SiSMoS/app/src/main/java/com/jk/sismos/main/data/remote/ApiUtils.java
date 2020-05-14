@@ -2,9 +2,10 @@ package com.jk.sismos.main.data.remote;
 
 public class ApiUtils {
 
-    private ApiUtils() {}
-
     public static final String BASE_URL = "http://so-unlam.net.ar/";
+
+    private ApiUtils() {
+    }
 
     public static APIService getAPIService() {
 

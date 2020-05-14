@@ -1,4 +1,5 @@
 package com.jk.sismos.main.data.remote;
+
 import com.jk.sismos.main.data.model.UserPost;
 
 import retrofit2.Call;
