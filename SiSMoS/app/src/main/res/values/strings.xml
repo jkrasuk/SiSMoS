@@ -9,4 +9,5 @@
     <string name="firstLineTitle">Sistema de Alerta de</string>
     <string name="secondLineTable">Movimientos Sísmicos</string>
     <string name="logo">Logo</string>
+    <string name="lastEarthquakesINPRES">Últimos sismos (INPRES)</string>
 </resources>

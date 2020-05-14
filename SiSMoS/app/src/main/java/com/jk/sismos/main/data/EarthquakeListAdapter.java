@@ -2,6 +2,7 @@ package com.jk.sismos.main.data;
 
 
 import android.content.Context;
+import android.icu.lang.UCharacter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.jk.sismos.R;
 import com.jk.sismos.main.data.model.Earthquake;
 
 import java.util.List;
+import java.util.Locale;
 
 public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
     Context context;
@@ -36,7 +38,6 @@ public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
         ViewHolder holder;
         final Earthquake rowItem = (Earthquake) getItem(position);
         LayoutInflater mInflater = (LayoutInflater) this.context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.earthquake_item, null);
             holder = new ViewHolder();
@@ -49,9 +50,29 @@ public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        holder.resume.setText(rowItem.getMagnitude() + " grados - " + UCharacter.toTitleCase(Locale.US, rowItem.getProvince(), null, 0));
+        holder.datetime.setText(rowItem.getDate() + " - " + rowItem.getTime());
+        holder.placeReference.setText(rowItem.getPlaceReference());
+        holder.depth.setText(rowItem.getDepth() + " de profundidad");
 
-        holder.resume.setText(rowItem.getTitle());
-        holder.depth.setText(rowItem.getEstado());
         return convertView;
+    }
+
+    public static String toTitleCase(String input) {
+        StringBuilder titleCase = new StringBuilder(input.length());
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
     }
 }

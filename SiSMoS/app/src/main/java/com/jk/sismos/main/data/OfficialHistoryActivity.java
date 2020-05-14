@@ -39,11 +39,23 @@ public class OfficialHistoryActivity extends AppCompatActivity {
             public void onResponse(Call<Feed> call, Response<Feed> response) {
                 if (response.isSuccessful()) {
                     Feed feed = response.body();
-                    earthquakeListAdapter = new EarthquakeListAdapter(getApplicationContext(),  feed.getEarthquakeList());
-                    earthquakeList.setAdapter(earthquakeListAdapter);
+
                     for (Earthquake item : feed.getEarthquakeList()) {
+                        String[] split = item.getTitle().split(" -- ");
+                        item.setDate(split[1]);
+                        item.setTime(split[2]);
+                        item.setLongitude(split[3]);
+                        item.setLongitude(split[4]);
+                        item.setMagnitude(split[5]);
+                        item.setDepth(split[6]);
+                        item.setProvince(split[7]);
+
+                        String[] splitReference = item.getDescription().split(" La magnitud");
+                        item.setPlaceReference(splitReference[0]);
                         Log.i("XML RESULTADO", item.toString());
                     }
+                    earthquakeListAdapter = new EarthquakeListAdapter(getApplicationContext(), feed.getEarthquakeList());
+                    earthquakeList.setAdapter(earthquakeListAdapter);
                 } else {
                     Log.i("XML ERROR", response.errorBody().toString());
                 }
