@@ -1,11 +1,15 @@
 package com.jk.sismos.main.data;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.jk.sismos.R;
 import com.jk.sismos.main.data.model.Earthquake;
 import com.jk.sismos.main.data.model.Feed;
@@ -21,14 +25,32 @@ public class OfficialHistoryActivity extends AppCompatActivity {
     private APIService mAPIService;
     private String TAG = "OfficialHistoryActivity";
     private EarthquakeListAdapter earthquakeListAdapter;
+    private FusedLocationProviderClient fusedLocationClient;
+    private Location lastKnownLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_official_history);
+
+
         earthquakeList = findViewById(R.id.earthquakeList);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         mAPIService = ApiUtils.getAPIService();
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(OfficialHistoryActivity.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        Log.d(TAG, "aca");
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            Log.d("Latitud", String.valueOf(location.getLatitude()));
+                            lastKnownLocation = location;
+                        }
+                    }
+                });
+
         getDataFromINPRES();
     }
 
@@ -44,7 +66,7 @@ public class OfficialHistoryActivity extends AppCompatActivity {
                         String[] split = item.getTitle().split(" -- ");
                         item.setDate(split[1]);
                         item.setTime(split[2]);
-                        item.setLongitude(split[3]);
+                        item.setLatitude(split[3]);
                         item.setLongitude(split[4]);
                         item.setMagnitude(split[5]);
                         item.setDepth(split[6]);
@@ -54,7 +76,8 @@ public class OfficialHistoryActivity extends AppCompatActivity {
                         item.setPlaceReference(splitReference[0]);
                         Log.i("XML RESULTADO", item.toString());
                     }
-                    earthquakeListAdapter = new EarthquakeListAdapter(getApplicationContext(), feed.getEarthquakeList());
+
+                    earthquakeListAdapter = new EarthquakeListAdapter(getApplicationContext(), feed.getEarthquakeList(), lastKnownLocation);
                     earthquakeList.setAdapter(earthquakeListAdapter);
                 } else {
                     Log.i("XML ERROR", response.errorBody().toString());

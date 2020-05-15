@@ -3,6 +3,7 @@ package com.jk.sismos.main.data;
 
 import android.content.Context;
 import android.icu.lang.UCharacter;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.Locale;
 
 public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
     Context context;
+    Location lastKnownLocation;
 
     private class ViewHolder {
         TextView resume;
@@ -29,9 +31,10 @@ public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
         }
     }
 
-    public EarthquakeListAdapter(Context context, List<Earthquake> items) {
+    public EarthquakeListAdapter(Context context, List<Earthquake> items, Location lastKnownLocation) {
         super(context, 0, items);
         this.context = context;
+        this.lastKnownLocation = lastKnownLocation;
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -55,6 +58,20 @@ public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
         holder.placeReference.setText(rowItem.getPlaceReference());
         holder.depth.setText(rowItem.getDepth() + " de profundidad");
 
+        if (!rowItem.getLongitude().isEmpty() && !rowItem.getLatitude().isEmpty() && lastKnownLocation != null) {
+            Location locationA = new Location("Punto de destino");
+
+            locationA.setLatitude(Double.parseDouble(rowItem.getLatitude()));
+            locationA.setLongitude(Double.parseDouble(rowItem.getLongitude()));
+
+            Location locationB = new Location("Punto local");
+
+            locationB.setLatitude(lastKnownLocation.getLatitude());
+            locationB.setLongitude(lastKnownLocation.getLongitude());
+
+            float distance = locationA.distanceTo(locationB) / 1000;
+            holder.distance.setText(String.format("%.2f", (distance)) + " km hasta el epicentro");
+        }
         return convertView;
     }
 
