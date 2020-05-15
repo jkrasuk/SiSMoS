@@ -16,31 +16,26 @@
             android:id="@+id/resume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="3.6 grados - San Juan"
             android:textStyle="bold"></TextView>
 
         <TextView
             android:id="@+id/datetime"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="11/05/2020 - 19:20:58"></TextView>
+            android:layout_height="wrap_content"></TextView>
 
         <TextView
             android:id="@+id/placeReference"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="19 km al SO de Va. Media Agua"></TextView>
+            android:layout_height="wrap_content"></TextView>
 
         <TextView
             android:id="@+id/depth"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="113 km. de profundidad"></TextView>
+            android:layout_height="wrap_content"></TextView>
 
         <TextView
             android:id="@+id/distance"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="113 km. de distancia"></TextView>
+            android:layout_height="wrap_content"></TextView>
     </LinearLayout>
 </LinearLayout>

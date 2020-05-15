@@ -1,4 +1,4 @@
-package com.jk.sismos.main.data;
+package com.jk.sismos.main.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -25,9 +25,9 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private APIService mAPIService;
     private String TAG = "LoginActivity";
-    public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         Button submitBtn = (Button) findViewById(R.id.btn_login);
 
         mAPIService = ApiUtils.getAPIService();
-// Here, thisActivity is the current activity
+
+        // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(LoginActivity.this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -64,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // Permission has already been granted
         }
-        
+
 //        submitBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

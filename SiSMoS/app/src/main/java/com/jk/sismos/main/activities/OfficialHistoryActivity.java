@@ -1,18 +1,22 @@
-package com.jk.sismos.main.data;
+package com.jk.sismos.main.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.jk.sismos.R;
-import com.jk.sismos.main.data.model.Earthquake;
-import com.jk.sismos.main.data.model.Feed;
+import com.jk.sismos.main.data.adapter.EarthquakeListAdapter;
+import com.jk.sismos.main.data.model.inpresList.Earthquake;
+import com.jk.sismos.main.data.model.inpresList.Feed;
 import com.jk.sismos.main.data.remoteXML.APIService;
 import com.jk.sismos.main.data.remoteXML.ApiUtils;
 
@@ -33,23 +37,28 @@ public class OfficialHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_official_history);
 
-
         earthquakeList = findViewById(R.id.earthquakeList);
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         mAPIService = ApiUtils.getAPIService();
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(OfficialHistoryActivity.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        Log.d(TAG, "aca");
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            Log.d("Latitud", String.valueOf(location.getLatitude()));
-                            lastKnownLocation = location;
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(OfficialHistoryActivity.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            Log.d(TAG, "aca");
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                Log.d("Latitud", String.valueOf(location.getLatitude()));
+                                lastKnownLocation = location;
+                            }
                         }
-                    }
-                });
+                    });
+        }
+
 
         getDataFromINPRES();
     }

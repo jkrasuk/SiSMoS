@@ -1,4 +1,4 @@
-package com.jk.sismos.main.data.model;
+package com.jk.sismos.main.data.model.inpresList;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;

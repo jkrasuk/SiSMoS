@@ -1,4 +1,4 @@
-package com.jk.sismos.main.data.model;
+package com.jk.sismos.main.data.model.inpresList;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -12,7 +12,7 @@ public class Earthquake {
     private String magnitude;
     private String depth;
     private String province;
-    private  String placeReference;
+    private String placeReference;
 
     @Element(name = "title")
     private String title;

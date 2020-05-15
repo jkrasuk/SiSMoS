@@ -1,4 +1,4 @@
-package com.jk.sismos.main.data;
+package com.jk.sismos.main.data.adapter;
 
 
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.jk.sismos.R;
-import com.jk.sismos.main.data.model.Earthquake;
+import com.jk.sismos.main.data.model.inpresList.Earthquake;
 
 import java.util.List;
 import java.util.Locale;
@@ -19,17 +19,6 @@ import java.util.Locale;
 public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
     Context context;
     Location lastKnownLocation;
-
-    private class ViewHolder {
-        TextView resume;
-        TextView datetime;
-        TextView placeReference;
-        TextView depth;
-        TextView distance;
-
-        private ViewHolder() {
-        }
-    }
 
     public EarthquakeListAdapter(Context context, List<Earthquake> items, Location lastKnownLocation) {
         super(context, 0, items);
@@ -71,25 +60,21 @@ public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
 
             float distance = locationA.distanceTo(locationB) / 1000;
             holder.distance.setText(String.format("%.2f", (distance)) + " km hasta el epicentro");
+            holder.distance.setVisibility(View.VISIBLE);
+        } else {
+            holder.distance.setVisibility(View.GONE);
         }
         return convertView;
     }
 
-    public static String toTitleCase(String input) {
-        StringBuilder titleCase = new StringBuilder(input.length());
-        boolean nextTitleCase = true;
+    private class ViewHolder {
+        TextView resume;
+        TextView datetime;
+        TextView placeReference;
+        TextView depth;
+        TextView distance;
 
-        for (char c : input.toCharArray()) {
-            if (Character.isSpaceChar(c)) {
-                nextTitleCase = true;
-            } else if (nextTitleCase) {
-                c = Character.toTitleCase(c);
-                nextTitleCase = false;
-            }
-
-            titleCase.append(c);
+        private ViewHolder() {
         }
-
-        return titleCase.toString();
     }
 }
