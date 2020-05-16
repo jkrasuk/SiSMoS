@@ -3,6 +3,7 @@ package com.jk.sismos.main.activities;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.TextClock;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,9 @@ public class HomeActivity extends AppCompatActivity {
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        TextClock textClock = (TextClock) findViewById(R.id.hk_time);
+
+        textClock.setFormat24Hour("kk:mm:ss");
     }
 
     @Override
