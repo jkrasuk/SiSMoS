@@ -1,7 +1,11 @@
 package com.jk.sismos.main.activities;
 
+import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
-import android.widget.FrameLayout;
+import android.text.method.LinkMovementMethod;
+import android.view.View;
 import android.widget.TextClock;
 import android.widget.TextView;
 
@@ -31,6 +35,16 @@ public class HomeActivity extends AppCompatActivity {
         TextClock textClock = (TextClock) findViewById(R.id.hk_time);
 
         textClock.setFormat24Hour("kk:mm:ss");
+        TextView helpText = (TextView) findViewById(R.id.helpText); //txt is object of TextView
+        helpText.setPaintFlags(helpText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        helpText.setMovementMethod(LinkMovementMethod.getInstance());
+        helpText.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setData(Uri.parse("https://www.argentina.gob.ar/salud/desastres/cuidados-terremotos"));
+                startActivity(browserIntent);
+            }
+        });
     }
 
     @Override
