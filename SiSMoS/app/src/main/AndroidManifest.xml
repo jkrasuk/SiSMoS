@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.jk.sismos">
 
     <application
@@ -10,9 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeActionBar">
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".main.activities.HomeActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            ></activity>
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".main.activities.LoginActivity"
             android:theme="@style/AppThemeNoActionBar">
             <intent-filter>
