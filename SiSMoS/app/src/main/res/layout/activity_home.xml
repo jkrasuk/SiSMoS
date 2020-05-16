@@ -18,9 +18,6 @@
             android:id="@+id/toolbar"
             style="@style/AppTheme.Toolbar" />
 
-        <include
-            android:id="@+id/outer"
-            layout="@layout/activity_home_content"></include>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

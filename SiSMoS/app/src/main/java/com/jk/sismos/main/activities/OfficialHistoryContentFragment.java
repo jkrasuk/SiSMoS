@@ -1,14 +1,19 @@
 package com.jk.sismos.main.activities;
 
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -24,7 +29,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OfficialHistoryActivity extends AppCompatActivity {
+
+public class OfficialHistoryContentFragment extends Fragment {
+
     private ListView earthquakeList;
     private APIService mAPIService;
     private String TAG = "OfficialHistoryActivity";
@@ -32,21 +39,34 @@ public class OfficialHistoryActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
     private Location lastKnownLocation;
 
+    private static final String TEXT = "text";
+
+    public static OfficialHistoryContentFragment newInstance(String text) {
+        OfficialHistoryContentFragment frag = new OfficialHistoryContentFragment();
+
+        Bundle args = new Bundle();
+        args.putString(TEXT, text);
+        frag.setArguments(args);
+
+        return frag;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_official_history);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+            Bundle savedInstanceState) {
+        // Pongo por default ese contenido
+        View layout = inflater.inflate(R.layout.activity_official_history, container, false);
 
-        earthquakeList = findViewById(R.id.earthquakeList);
+        earthquakeList = layout.findViewById(R.id.earthquakeList);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         mAPIService = ApiUtils.getAPIService();
-        if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(OfficialHistoryActivity.this, new OnSuccessListener<Location>() {
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             Log.d(TAG, "aca");
@@ -59,8 +79,8 @@ public class OfficialHistoryActivity extends AppCompatActivity {
                     });
         }
 
-
         getDataFromINPRES();
+        return layout;
     }
 
     private void getDataFromINPRES() {
@@ -86,7 +106,7 @@ public class OfficialHistoryActivity extends AppCompatActivity {
                         Log.i("XML RESULTADO", item.toString());
                     }
 
-                    earthquakeListAdapter = new EarthquakeListAdapter(getApplicationContext(), feed.getEarthquakeList(), lastKnownLocation);
+                    earthquakeListAdapter = new EarthquakeListAdapter(getActivity(), feed.getEarthquakeList(), lastKnownLocation);
                     earthquakeList.setAdapter(earthquakeListAdapter);
                 } else {
                     Log.i("XML ERROR", response.errorBody().toString());
@@ -101,3 +121,4 @@ public class OfficialHistoryActivity extends AppCompatActivity {
         });
     }
 }
+

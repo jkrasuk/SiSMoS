@@ -13,9 +13,6 @@
             android:name=".main.activities.HomeActivity"
             android:theme="@style/AppTheme"></activity>
         <activity
-            android:name=".main.activities.OfficialHistoryActivity"
-            android:label="@string/lastEarthquakesINPRES" />
-        <activity
             android:name=".main.activities.LoginActivity"
             android:theme="@style/AppThemeNoActionBar">
             <intent-filter>
