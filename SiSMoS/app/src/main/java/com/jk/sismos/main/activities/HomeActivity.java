@@ -1,5 +1,6 @@
 package com.jk.sismos.main.activities;
 
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +17,13 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.jk.sismos.R;
+import com.jk.sismos.main.sensors.ShakeDetector;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        DrawerLayout.DrawerListener {
+        DrawerLayout.DrawerListener, ShakeDetector.Listener {
     private DrawerLayout drawerLayout;
+    private ShakeDetector sd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,10 @@ public class HomeActivity extends AppCompatActivity
         menuItem.setChecked(true);
 
         drawerLayout.addDrawerListener(this);
+
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sd = new ShakeDetector(this);
+        sd.start(sensorManager);
     }
 
     @Override
@@ -52,6 +59,7 @@ public class HomeActivity extends AppCompatActivity
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            sd.stop();
         }
     }
 
@@ -110,6 +118,11 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onDrawerStateChanged(int i) {
         //cambio de estado, puede ser STATE_IDLE, STATE_DRAGGING or STATE_SETTLING
+    }
+
+    @Override
+    public void hearShake() {
+        Toast.makeText(this, "Movimiento detectado", Toast.LENGTH_SHORT).show();
     }
 }
 
