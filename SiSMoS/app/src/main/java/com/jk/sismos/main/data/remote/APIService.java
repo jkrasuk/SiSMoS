@@ -8,9 +8,19 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 public interface APIService {
-
     @POST("api/api/login")
     @FormUrlEncoded
     Call<UserPost> login(@Field("email") String email,
                          @Field("password") String password);
+
+    @POST("api/api/register")
+    @FormUrlEncoded
+    Call<UserPost> register(@Field("env") String env,
+                            @Field("name") String name,
+                            @Field("lastname") String surname,
+                            @Field("dni") Integer dni,
+                            @Field("email") String email,
+                            @Field("password") String password,
+                            @Field("commission") Integer commission,
+                            @Field("group") Integer group);
 }

@@ -15,13 +15,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jk.sismos.R;
+import com.jk.sismos.main.data.remote.Request;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
-
+    private Request request;
     @Bind(R.id.input_name)
     EditText _nameText;
     @Bind(R.id.input_surname)
@@ -44,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -65,6 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -98,9 +101,10 @@ public class RegisterActivity extends AppCompatActivity {
         String name = _nameText.getText().toString();
         String surname = _surnameText.getText().toString();
         String email = _emailText.getText().toString();
+        String dni = _dniText.getText().toString();
         String password = _passwordText.getText().toString();
 
-
+        sendRegister(name, surname, dni, email, password);
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
@@ -122,6 +126,11 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), "Revise los datos ingresados", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
+    }
+
+    public void sendRegister(String name, String surname, String dni, String email, String password) {
+        Request request = new Request();
+        request.sendRegister(name, surname, dni, email, password);
     }
 
     public boolean validate() {
