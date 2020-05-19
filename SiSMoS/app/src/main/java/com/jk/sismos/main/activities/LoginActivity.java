@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,13 +16,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.jk.sismos.R;
-import com.jk.sismos.main.data.model.UserPost;
 import com.jk.sismos.main.data.remote.APIService;
 import com.jk.sismos.main.data.remote.ApiUtils;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.jk.sismos.main.data.remote.Request;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -67,30 +64,15 @@ public class LoginActivity extends AppCompatActivity {
             // Permission has already been granted
         }
 
-//        submitBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String trimmedEmail = email.getText().toString().trim();
-//                String trimmedPassword = password.getText().toString().trim();
-//
-//                if (!TextUtils.isEmpty(trimmedEmail) && !TextUtils.isEmpty(trimmedPassword)) {
-//                    sendLogin(trimmedEmail, trimmedPassword);
-//                }
-//            }
-//        });
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }
-        });
+                String trimmedEmail = email.getText().toString().trim();
+                String trimmedPassword = password.getText().toString().trim();
 
-        submitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(trimmedEmail) && !TextUtils.isEmpty(trimmedPassword)) {
+                    sendLogin(trimmedEmail, trimmedPassword);
+                }
             }
         });
 
@@ -103,29 +85,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
+    // TODO: La última vez que ejecute me tiraba "Error de autenticación", capaz que faltan campos
     public void sendLogin(String email, String password) {
-        mAPIService.login(email, password).enqueue(new Callback<UserPost>() {
-            @Override
-            public void onResponse(Call<UserPost> call, Response<UserPost> response) {
-                if (response.isSuccessful()) {
-                    showResponse(response.body().toString());
-                    Log.i(TAG, "Request enviado." + response.body().toString());
-                } else {
-
-                    Log.i(TAG, "Ocurrió un error.");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserPost> call, Throwable t) {
-                Log.e(TAG, "Error al enviar el request.");
-
-            }
-        });
-    }
-
-    public void showResponse(String response) {
-        Log.d(TAG, response);
+        Request request = new Request();
+        request.sendLogin(email, password);
     }
 }
