@@ -32,14 +32,13 @@ import retrofit2.Response;
 
 public class OfficialHistoryContentFragment extends Fragment {
 
+    private static final String TAG = "OfficialHistory";
+    private static final String TEXT = "text";
     private ListView earthquakeList;
     private APIService mAPIService;
-    private String TAG = "OfficialHistoryActivity";
     private EarthquakeListAdapter earthquakeListAdapter;
     private FusedLocationProviderClient fusedLocationClient;
     private Location lastKnownLocation;
-
-    private static final String TEXT = "text";
 
     public static OfficialHistoryContentFragment newInstance(String text) {
         OfficialHistoryContentFragment frag = new OfficialHistoryContentFragment();

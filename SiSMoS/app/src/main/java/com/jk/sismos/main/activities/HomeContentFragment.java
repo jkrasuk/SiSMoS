@@ -20,6 +20,7 @@ import com.jk.sismos.R;
 
 public class HomeContentFragment extends Fragment {
 
+    private static final String TAG = "HomeContent";
 
     private static final String TEXT = "text";
 
@@ -39,9 +40,9 @@ public class HomeContentFragment extends Fragment {
         // Pongo por default ese contenido
         View layout = inflater.inflate(R.layout.activity_home_content, container, false);
 
-        TextClock textClock = (TextClock) layout.findViewById(R.id.hk_time);
+        TextClock textClock = layout.findViewById(R.id.hk_time);
         textClock.setFormat24Hour("kk:mm:ss");
-        TextView helpText = (TextView) layout.findViewById(R.id.helpText); //txt is object of TextView
+        TextView helpText = layout.findViewById(R.id.helpText); //txt is object of TextView
         helpText.setPaintFlags(helpText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         helpText.setMovementMethod(LinkMovementMethod.getInstance());
         helpText.setOnClickListener(new View.OnClickListener() {

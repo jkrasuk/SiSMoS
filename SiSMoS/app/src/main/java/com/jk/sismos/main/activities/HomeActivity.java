@@ -22,6 +22,7 @@ import com.jk.sismos.main.sensors.ShakeDetector;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener, ShakeDetector.Listener {
+    private static final String TAG = "HomeActivity";
     private DrawerLayout drawerLayout;
     private ShakeDetector sd;
 

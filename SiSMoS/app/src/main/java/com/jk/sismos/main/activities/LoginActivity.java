@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -26,18 +27,18 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private static final String TAG = "LoginActivity";
     private APIService mAPIService;
-    private String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final EditText email = (EditText) findViewById(R.id.input_email);
-        final EditText password = (EditText) findViewById(R.id.input_password);
-        Button submitBtn = (Button) findViewById(R.id.btn_login);
-
+        final EditText email = findViewById(R.id.input_email);
+        final EditText password = findViewById(R.id.input_password);
+        Button submitBtn = findViewById(R.id.btn_login);
+        TextView register = findViewById(R.id.register);
         mAPIService = ApiUtils.getAPIService();
 
         // Here, thisActivity is the current activity
@@ -81,6 +82,22 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
