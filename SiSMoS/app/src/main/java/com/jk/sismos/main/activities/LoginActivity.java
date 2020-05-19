@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -96,12 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                 if(value.contains("state='success'")){
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onError(@NonNull Throwable throwable) {
-                // here you access the throwable and check what to do
+                Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta", Toast.LENGTH_LONG).show();
             }
         });
     }
