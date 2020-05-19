@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -19,6 +20,7 @@ import com.jk.sismos.R;
 import com.jk.sismos.main.data.remote.APIService;
 import com.jk.sismos.main.data.remote.ApiUtils;
 import com.jk.sismos.main.data.remote.Request;
+import com.jk.sismos.main.data.remote.RequestCallbacks;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -88,6 +90,19 @@ public class LoginActivity extends AppCompatActivity {
     // TODO: La última vez que ejecute me tiraba "Error de autenticación", capaz que faltan campos
     public void sendLogin(String email, String password) {
         Request request = new Request();
-        request.sendLogin(email, password);
+        request.sendLogin(email, password, new RequestCallbacks() {
+            @Override
+            public void onSuccess(@NonNull String value) {
+                if(value.contains("state='success'")){
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable throwable) {
+                // here you access the throwable and check what to do
+            }
+        });
     }
 }

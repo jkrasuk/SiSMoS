@@ -68,10 +68,8 @@ public class OfficialHistoryContentFragment extends Fragment {
                     .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            Log.d(TAG, "aca");
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
-                                Log.d("Latitud", String.valueOf(location.getLatitude()));
                                 lastKnownLocation = location;
                             }
                         }
@@ -83,7 +81,6 @@ public class OfficialHistoryContentFragment extends Fragment {
     }
 
     private void getDataFromINPRES() {
-        Log.d(TAG, "dentro");
         mAPIService.getEarthquakeData().enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
@@ -102,7 +99,6 @@ public class OfficialHistoryContentFragment extends Fragment {
 
                         String[] splitReference = item.getDescription().split(" La magnitud");
                         item.setPlaceReference(splitReference[0]);
-                        Log.i("XML RESULTADO", item.toString());
                     }
 
                     earthquakeListAdapter = new EarthquakeListAdapter(getActivity(), feed.getEarthquakeList(), lastKnownLocation);
