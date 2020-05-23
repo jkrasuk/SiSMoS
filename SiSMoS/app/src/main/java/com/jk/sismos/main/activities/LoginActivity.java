@@ -1,11 +1,15 @@
 package com.jk.sismos.main.activities;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +33,16 @@ public class LoginActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private static final String TAG = "LoginActivity";
     private APIService mAPIService;
+    private BroadcastReceiver br = null;
+    private IntentFilter filter;
+
+
+    public boolean isOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        //should check null because in airplane mode it will be null
+        return (netInfo != null && netInfo.isConnected());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +54,10 @@ public class LoginActivity extends AppCompatActivity {
         Button submitBtn = findViewById(R.id.btn_login);
         TextView register = findViewById(R.id.register);
         mAPIService = ApiUtils.getAPIService();
+        
+        if (!isOnline(getApplicationContext())) {
+            Toast.makeText(this, "No hay internet", Toast.LENGTH_SHORT).show();
+        }
 
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(LoginActivity.this,
@@ -94,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
         request.sendLogin(email, password, new RequestCallbacks() {
             @Override
             public void onSuccess(@NonNull String value) {
-                if(value.contains("state='success'")){
+                if (value.contains("state='success'")) {
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(intent);
                 } else {
@@ -108,4 +126,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
 }
