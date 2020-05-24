@@ -2,7 +2,7 @@ package com.jk.sismos.main.data.remote;
 
 import androidx.annotation.NonNull;
 
-import com.jk.sismos.main.data.model.UserPost;
+import com.jk.sismos.main.data.model.user.UserPost;
 
 import okhttp3.ResponseBody;
 

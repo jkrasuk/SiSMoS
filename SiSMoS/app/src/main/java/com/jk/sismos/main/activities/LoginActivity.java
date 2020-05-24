@@ -25,11 +25,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.jk.sismos.R;
-import com.jk.sismos.main.data.model.UserPost;
+import com.jk.sismos.main.data.model.user.UserPost;
 import com.jk.sismos.main.data.remote.APIService;
 import com.jk.sismos.main.data.remote.ApiUtils;
 import com.jk.sismos.main.data.remote.Request;
 import com.jk.sismos.main.data.remote.RequestCallbacks;
+import com.jk.sismos.main.utils.Constants;
+import com.jk.sismos.main.utils.EventManager;
 
 import java.io.IOException;
 
@@ -42,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private static final String TAG = "LoginActivity";
     private APIService mAPIService;
+    private EventManager eventManager;
 
     public boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -54,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        eventManager = new EventManager(this);
         final EditText email = findViewById(R.id.input_email);
         final EditText password = findViewById(R.id.input_password);
         Button submitBtn = findViewById(R.id.btn_login);
@@ -123,6 +126,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (value.getState().equals("success")) {
                         Log.d(TAG, value.getToken());
                         preferences.edit().putString("token", value.getToken()).commit();
+                        EventManager.registerEvent(Constants.LOGIN_CORRECT);
+
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);
                     } else {

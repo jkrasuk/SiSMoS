@@ -1,4 +1,4 @@
-package com.jk.sismos.main.data.model;
+package com.jk.sismos.main.data.model.user;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -2,7 +2,8 @@ package com.jk.sismos.main.data.remote;
 
 import android.util.Log;
 
-import com.jk.sismos.main.data.model.UserPost;
+import com.jk.sismos.main.data.model.event.EventPost;
+import com.jk.sismos.main.data.model.user.UserPost;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +51,6 @@ public class Request {
             public void onResponse(Call<UserPost> call, Response<UserPost> response) {
                 if (response.isSuccessful()) {
                     showResponse(response.body().toString());
-                    Log.i(TAG, "Request enviado." + response.body().toString());
                 } else {
 
                     Log.i(TAG, "Ocurrió un error.");
@@ -59,6 +59,25 @@ public class Request {
 
             @Override
             public void onFailure(Call<UserPost> call, Throwable t) {
+                Log.e(TAG, "Error al enviar el request.");
+            }
+        });
+    }
+
+    public void registerEvent(String token, String typeEvents, String state, String description) {
+        mAPIService.registerEvent(token, ENV, typeEvents, state, description).enqueue(new Callback<EventPost>() {
+            @Override
+            public void onResponse(Call<EventPost> call, Response<EventPost> response) {
+                if (response.isSuccessful()) {
+                    showResponse(response.body().toString());
+                } else {
+
+                    Log.i(TAG, "Ocurrió un error.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventPost> call, Throwable t) {
                 Log.e(TAG, "Error al enviar el request.");
             }
         });
