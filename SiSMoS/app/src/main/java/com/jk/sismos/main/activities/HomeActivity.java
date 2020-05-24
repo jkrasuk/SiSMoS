@@ -17,14 +17,18 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.jk.sismos.R;
-import com.jk.sismos.main.sensors.ShakeDetector;
+import com.jk.sismos.main.sensors.accelerometer.ShakeDetector;
+import com.jk.sismos.main.sensors.gyroscope.RotationDetector;
+import com.jk.sismos.main.sensors.light.LightDetector;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        DrawerLayout.DrawerListener, ShakeDetector.Listener {
+        DrawerLayout.DrawerListener, ShakeDetector.Listener, LightDetector.Listener, RotationDetector.Listener {
     private static final String TAG = "HomeActivity";
     private DrawerLayout drawerLayout;
     private ShakeDetector sd;
+    private LightDetector ld;
+    private RotationDetector rd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,12 @@ public class HomeActivity extends AppCompatActivity
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sd = new ShakeDetector(this);
         sd.start(sensorManager);
+
+        ld = new LightDetector(this);
+        ld.start(sensorManager);
+
+        rd = new RotationDetector(this);
+        rd.start(sensorManager);
     }
 
     @Override
@@ -130,6 +140,16 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void hearShake() {
         Toast.makeText(this, "Movimiento detectado", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void senseNoLight() {
+        Toast.makeText(this, "Luz apagada detectada", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void noRotation() {
+        Toast.makeText(this, "Rotación detectada", Toast.LENGTH_SHORT).show();
     }
 }
 

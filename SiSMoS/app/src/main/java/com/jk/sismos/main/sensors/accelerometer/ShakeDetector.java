@@ -1,4 +1,4 @@
-package com.jk.sismos.main.sensors;
+package com.jk.sismos.main.sensors.accelerometer;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -6,8 +6,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import com.jk.sismos.main.sensors.utils.SignQueue;
+
 public class ShakeDetector implements SensorEventListener {
-    private final EarthquakeSignQueue queue = new EarthquakeSignQueue();
+    private static final long MAX_WINDOW_SIZE = 250000000;
+
+    private final SignQueue queue = new SignQueue(MAX_WINDOW_SIZE);
     private final Listener listener;
 
     private SensorManager sensorManager;
@@ -52,7 +56,7 @@ public class ShakeDetector implements SensorEventListener {
         boolean accelerating = isAccelerating(event);
         long timestamp = event.timestamp;
         queue.add(timestamp, accelerating);
-        if (queue.isShaking()) {
+        if (queue.isMoving()) {
             queue.clear();
             listener.hearShake();
         }
