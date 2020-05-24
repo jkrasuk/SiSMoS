@@ -1,15 +1,15 @@
 package com.jk.sismos.main.activities;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,21 +21,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.jk.sismos.R;
+import com.jk.sismos.main.data.model.UserPost;
 import com.jk.sismos.main.data.remote.APIService;
 import com.jk.sismos.main.data.remote.ApiUtils;
 import com.jk.sismos.main.data.remote.Request;
 import com.jk.sismos.main.data.remote.RequestCallbacks;
 
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
+
 
 public class LoginActivity extends AppCompatActivity {
+    SharedPreferences preferences;
 
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private static final String TAG = "LoginActivity";
     private APIService mAPIService;
-    private BroadcastReceiver br = null;
-    private IntentFilter filter;
-
 
     public boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -54,7 +60,8 @@ public class LoginActivity extends AppCompatActivity {
         Button submitBtn = findViewById(R.id.btn_login);
         TextView register = findViewById(R.id.register);
         mAPIService = ApiUtils.getAPIService();
-        
+        preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+
         if (!isOnline(getApplicationContext())) {
             Toast.makeText(this, "No hay internet", Toast.LENGTH_SHORT).show();
         }
@@ -111,12 +118,17 @@ public class LoginActivity extends AppCompatActivity {
         Request request = new Request();
         request.sendLogin(email, password, new RequestCallbacks() {
             @Override
-            public void onSuccess(@NonNull String value) {
-                if (value.contains("state='success'")) {
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta", Toast.LENGTH_LONG).show();
+            public void onSuccess(@NonNull UserPost value) {
+                if (value != null) {
+                    if (value.getState().equals("success")) {
+                        Log.d(TAG, value.getToken());
+                        preferences.edit().putString("token", value.getToken()).commit();
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Log.d(TAG, value.toString());
+                        Toast.makeText(getApplicationContext(), value.getMsg(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
@@ -124,7 +136,24 @@ public class LoginActivity extends AppCompatActivity {
             public void onError(@NonNull Throwable throwable) {
                 Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta", Toast.LENGTH_LONG).show();
             }
+
+            @Override
+            public void onErrorBody(@NonNull ResponseBody errorBody) {
+                if (errorBody != null) {
+                    JsonParser parser = new JsonParser();
+                    JsonElement mJson = null;
+                    try {
+                        mJson = parser.parse(errorBody.string());
+                        Gson gson = new Gson();
+                        UserPost errorResponse = gson.fromJson(mJson, UserPost.class);
+
+                        Log.d(TAG, errorResponse.getMsg());
+                        Toast.makeText(getApplicationContext(), errorResponse.getMsg(), Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         });
     }
-
 }

@@ -18,6 +18,10 @@ public class UserPost {
     @Expose
     private String msg;
 
+    @SerializedName("token")
+    @Expose
+    private String token;
+
     public String getState() {
         return state;
     }
@@ -49,6 +53,7 @@ public class UserPost {
                 ", env='" + env + '\'' +
                 ", user=" + user +
                 ", msg='" + msg + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 
@@ -58,5 +63,13 @@ public class UserPost {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

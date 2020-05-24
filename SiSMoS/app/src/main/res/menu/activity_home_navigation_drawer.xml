@@ -32,6 +32,11 @@
             android:icon="@drawable/ic_menu_inpres"
             android:title="@string/menu_inpres" />
     </group>
-
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_exit"
+            android:icon="@drawable/ic_power_settings_new_black_24dp"
+            android:title="@string/exit" />
+    </group>
 
 </menu>

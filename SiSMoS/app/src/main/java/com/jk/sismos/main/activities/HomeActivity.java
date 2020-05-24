@@ -74,6 +74,9 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_inpres:
                 title = R.string.menu_inpres;
                 break;
+            case R.id.nav_exit:
+                title = R.string.exit;
+                break;
             default:
                 throw new IllegalArgumentException("menu option not implemented!!");
         }
@@ -89,6 +92,9 @@ public class HomeActivity extends AppCompatActivity
                 Fragment fragmentHistory = OfficialHistoryContentFragment.newInstance(getString(title));
                 FragmentManager fragmentHistoryManager = getSupportFragmentManager();
                 fragmentHistoryManager.beginTransaction().replace(R.id.home_content, fragmentHistory).commit();
+                break;
+            case R.string.exit:
+                finish();
                 break;
         }
 

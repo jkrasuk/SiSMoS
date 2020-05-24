@@ -23,14 +23,12 @@ public class Request {
         mAPIService.login(ENV, email, password, COMMISION, GROUP).enqueue(new Callback<UserPost>() {
             @Override
             public void onResponse(Call<UserPost> call, Response<UserPost> response) {
-                showResponse(response.body().toString());
-                if (response.isSuccessful()) {
-                    Log.i(TAG, "Request enviado." + response.body().toString());
-                    if (requestCallbacks != null) {
-                        requestCallbacks.onSuccess(response.body().toString());
+                if (requestCallbacks != null) {
+                    if (response.isSuccessful()) {
+                        requestCallbacks.onSuccess(response.body());
+                    } else {
+                        requestCallbacks.onErrorBody(response.errorBody());
                     }
-                } else {
-                    Log.i(TAG, "Ocurrió un error.");
                 }
             }
 
@@ -41,10 +39,12 @@ public class Request {
                 }
                 Log.e(TAG, "Error al enviar el request.");
             }
+
         });
     }
 
-    public void sendRegister(String name, String surname, String dni, String email, String password) {
+    public void sendRegister(String name, String surname, String dni, String email, String
+            password) {
         mAPIService.register(ENV, name, surname, Integer.valueOf(dni), email, password, COMMISION, GROUP).enqueue(new Callback<UserPost>() {
             @Override
             public void onResponse(Call<UserPost> call, Response<UserPost> response) {
