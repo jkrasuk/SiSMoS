@@ -21,10 +21,6 @@ public class ShakeDetector implements SensorEventListener {
         this.listener = listener;
     }
 
-    public interface Listener {
-        void hearShake();
-    }
-
     public boolean start(SensorManager sensorManager) {
         if (accelerometer != null) {
             return true;
@@ -40,7 +36,6 @@ public class ShakeDetector implements SensorEventListener {
         }
         return accelerometer != null;
     }
-
 
     public void stop() {
         if (accelerometer != null) {
@@ -76,5 +71,9 @@ public class ShakeDetector implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    public interface Listener {
+        void hearShake();
     }
 }

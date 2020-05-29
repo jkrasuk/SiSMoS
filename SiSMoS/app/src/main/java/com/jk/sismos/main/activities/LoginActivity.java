@@ -39,10 +39,9 @@ import okhttp3.ResponseBody;
 
 
 public class LoginActivity extends AppCompatActivity {
-    SharedPreferences preferences;
-
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private static final String TAG = "LoginActivity";
+    SharedPreferences preferences;
     private APIService mAPIService;
     private EventManager eventManager;
 

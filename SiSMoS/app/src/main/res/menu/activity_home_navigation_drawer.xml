@@ -9,22 +9,22 @@
             android:title="@string/menu_home" />
 
     </group>
-<!--    <group android:checkableBehavior="single">-->
-<!--        <item-->
-<!--            android:id="@+id/nav_camera"-->
-<!--            android:icon="@drawable/ic_menu_camera"-->
-<!--            android:title="@string/menu_camera" />-->
+    <!--    <group android:checkableBehavior="single">-->
+    <!--        <item-->
+    <!--            android:id="@+id/nav_camera"-->
+    <!--            android:icon="@drawable/ic_menu_camera"-->
+    <!--            android:title="@string/menu_camera" />-->
 
-<!--    </group>-->
+    <!--    </group>-->
 
-<!--    <group-->
-<!--        android:id="@+id/group1"-->
-<!--        android:checkableBehavior="single">-->
-<!--        <item-->
-<!--            android:id="@+id/nav_manage"-->
-<!--            android:icon="@drawable/ic_menu_manage"-->
-<!--            android:title="@string/menu_tools" />-->
-<!--    </group>-->
+    <!--    <group-->
+    <!--        android:id="@+id/group1"-->
+    <!--        android:checkableBehavior="single">-->
+    <!--        <item-->
+    <!--            android:id="@+id/nav_manage"-->
+    <!--            android:icon="@drawable/ic_menu_manage"-->
+    <!--            android:title="@string/menu_tools" />-->
+    <!--    </group>-->
 
     <group android:checkableBehavior="single">
         <item

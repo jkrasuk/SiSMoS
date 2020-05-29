@@ -22,7 +22,6 @@ import butterknife.ButterKnife;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
-    private Request request;
     @Bind(R.id.input_name)
     EditText _nameText;
     @Bind(R.id.input_surname)
@@ -39,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button _signupButton;
     @Bind(R.id.link_login)
     TextView _loginLink;
+    private Request request;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

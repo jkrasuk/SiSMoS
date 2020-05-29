@@ -4,18 +4,15 @@ public class SignQueue {
 
     private final long minWindowSize;
     private final long maxWindowSize;
-
-    public SignQueue(long maxWindowSize) {
-        this.maxWindowSize = maxWindowSize;
-        this.minWindowSize = maxWindowSize >> 1;
-    }
-
     private final SignPool pool = new SignPool();
-
     private Sign oldest;
     private Sign newest;
     private int sampleCount;
     private int movingCount;
+    public SignQueue(long maxWindowSize) {
+        this.maxWindowSize = maxWindowSize;
+        this.minWindowSize = maxWindowSize >> 1;
+    }
 
     public void add(long timestamp, boolean accelerating) {
         purge(timestamp - maxWindowSize);

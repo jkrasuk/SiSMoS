@@ -34,8 +34,8 @@ public interface APIService {
     @POST("api/api/event")
     @FormUrlEncoded
     Call<EventPost> registerEvent(@Header("token") String token,
-                             @Field("env") String env,
-                             @Field("type_events") String typeEvents,
-                             @Field("state") String state,
-                             @Field("description") String description);
+                                  @Field("env") String env,
+                                  @Field("type_events") String typeEvents,
+                                  @Field("state") String state,
+                                  @Field("description") String description);
 }

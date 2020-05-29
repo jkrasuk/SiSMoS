@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -57,7 +59,38 @@ public class OfficialHistoryContentFragment extends Fragment {
         View layout = inflater.inflate(R.layout.activity_official_history, container, false);
 
         earthquakeList = layout.findViewById(R.id.earthquakeList);
+        earthquakeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
 
+                //Preparo los parametros para enviar al fragment de detalle
+                String depth = ((TextView) view.findViewById(R.id.depth)).getText().toString();
+                String mainInfo = ((TextView) view.findViewById(R.id.resume)).getText().toString();
+                String distance = ((TextView) view.findViewById(R.id.distance)).getText().toString();
+                String detail = ((TextView) view.findViewById(R.id.placeReference)).getText().toString();
+                String dateTime = ((TextView) view.findViewById(R.id.datetime)).getText().toString();
+                String latitude = ((TextView) view.findViewById(R.id.latitude)).getText().toString();
+                String longitude = ((TextView) view.findViewById(R.id.longitude)).getText().toString();
+
+
+                DetailFragment nextFrag = new DetailFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("depth", depth);
+                bundle.putString("mainInfo", mainInfo);
+                bundle.putString("distance", distance);
+                bundle.putString("detail", detail);
+                bundle.putString("dateTime", dateTime);
+                bundle.putString("latitude", latitude);
+                bundle.putString("longitude", longitude);
+                nextFrag.setArguments(bundle);
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.home_content, nextFrag, "detailFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         mAPIService = ApiUtils.getAPIService();
@@ -78,6 +111,12 @@ public class OfficialHistoryContentFragment extends Fragment {
 
         getDataFromINPRES();
         return layout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "Volvi");
     }
 
     private void getDataFromINPRES() {

@@ -8,9 +8,10 @@ import com.jk.sismos.main.data.remote.Request;
 import static android.content.Context.MODE_PRIVATE;
 
 public class EventManager {
-    private Context context;
     private static SharedPreferences prefs;
     private static Request request;
+    private Context context;
+
     public EventManager(Context context) {
         this.context = context;
         prefs = this.context.getSharedPreferences("preferences", MODE_PRIVATE);
@@ -32,7 +33,7 @@ public class EventManager {
         }
 
         if (!typeEvents.equals("") && !description.equals("") && !state.equals("") && !token.equals("")) {
-           request.registerEvent(token, typeEvents, state, description);
+            request.registerEvent(token, typeEvents, state, description);
         }
     }
 }

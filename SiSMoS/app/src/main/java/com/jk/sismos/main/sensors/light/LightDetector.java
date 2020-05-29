@@ -15,10 +15,6 @@ public class LightDetector implements SensorEventListener {
         this.listener = listener;
     }
 
-    public interface Listener {
-        void senseNoLight();
-    }
-
     public boolean start(SensorManager sensorManager) {
         if (lightSensor != null) {
             return true;
@@ -34,7 +30,6 @@ public class LightDetector implements SensorEventListener {
         }
         return lightSensor != null;
     }
-
 
     public void stop() {
         if (lightSensor != null) {
@@ -55,9 +50,9 @@ public class LightDetector implements SensorEventListener {
     private boolean isLightOff(SensorEvent event) {
         float currentLight = event.values[0];
 
-        if(currentLight < 1){
+        if (currentLight < 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -65,5 +60,9 @@ public class LightDetector implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    public interface Listener {
+        void senseNoLight();
     }
 }
