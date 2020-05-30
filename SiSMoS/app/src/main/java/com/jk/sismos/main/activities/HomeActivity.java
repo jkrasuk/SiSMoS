@@ -83,6 +83,8 @@ public class HomeActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
             sd.stop();
+            ld.stop();
+            rd.stop();
         }
     }
 
