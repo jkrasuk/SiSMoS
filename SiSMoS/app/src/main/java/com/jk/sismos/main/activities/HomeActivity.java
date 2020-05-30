@@ -93,6 +93,9 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_home:
                 title = R.string.menu_home;
                 break;
+            case R.id.nav_history:
+                title = R.string.menu_history;
+                break;
             case R.id.nav_inpres:
                 title = R.string.menu_inpres;
                 break;
@@ -109,6 +112,11 @@ public class HomeActivity extends AppCompatActivity
                 Fragment fragment = HomeContentFragment.newInstance(getString(R.string.menu_home));
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.home_content, fragment).commit();
+                break;
+            case R.string.menu_history:
+                Fragment fragmentFeltHistory = FeltHistoryContentFragment.newInstance(getString(title));
+                FragmentManager fragmentFeltHistoryManager = getSupportFragmentManager();
+                fragmentFeltHistoryManager.beginTransaction().replace(R.id.home_content, fragmentFeltHistory).commit();
                 break;
             case R.string.menu_inpres:
                 Fragment fragmentHistory = OfficialHistoryContentFragment.newInstance(getString(title));
@@ -206,6 +214,7 @@ public class HomeActivity extends AppCompatActivity
     public void verificacionSismo() {
         Log.d(TAG, "noHayRotacion " + noHayRotacion + " - luzApagada " + luzApagada + " - hayMovimiento " + hayMovimiento);
         if (noHayRotacion && luzApagada && hayMovimiento) {
+            //TODO como esta actualmente, solamente funciona cuando esta en home. Deberia poder ir desde cualquier pantalla
             final HomeContentFragment homeFragment = (HomeContentFragment) getSupportFragmentManager().findFragmentById(R.id.home_content);
             if (homeFragment != null) {
                 homeFragment.setHelpText("PELIGRO");
@@ -223,6 +232,7 @@ public class HomeActivity extends AppCompatActivity
 
                 textList.add(data);
                 String jsonText = gson.toJson(textList);
+                //TODO Deberia agrupar los distintos sismos, utilizando el timestamp
                 Log.d(TAG, jsonText);
                 prefs.edit().putString("history", jsonText).apply();
 

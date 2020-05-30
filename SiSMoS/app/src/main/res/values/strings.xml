@@ -22,4 +22,5 @@
     <string name="healthCare">Cuidados de la salud ante terremotos</string>
     <string name="menu_home">Bienvenido</string>
     <string name="exit">Salir</string>
+    <string name="menu_history">Historial de alarmas</string>
 </resources>
