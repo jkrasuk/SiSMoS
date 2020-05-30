@@ -1,5 +1,6 @@
 package com.jk.sismos.main.activities;
 
+import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +17,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
 import com.jk.sismos.R;
 import com.jk.sismos.main.sensors.accelerometer.ShakeDetector;
 import com.jk.sismos.main.sensors.gyroscope.RotationDetector;
 import com.jk.sismos.main.sensors.light.LightDetector;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,6 +39,7 @@ public class HomeActivity extends AppCompatActivity
     private boolean noHayRotacion;
     private boolean luzApagada;
     private boolean hayMovimiento;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        prefs = getSharedPreferences("preferences", MODE_PRIVATE);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -164,7 +170,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void senseNoLight() {
 //        Toast.makeText(this, "Luz apagada detectada", Toast.LENGTH_SHORT).show();
-        this.luzApagada = false;
+        this.luzApagada = true;
         Timer t = new Timer(false);
         t.schedule(new TimerTask() {
             @Override
@@ -203,6 +209,23 @@ public class HomeActivity extends AppCompatActivity
             final HomeContentFragment homeFragment = (HomeContentFragment) getSupportFragmentManager().findFragmentById(R.id.home_content);
             if (homeFragment != null) {
                 homeFragment.setHelpText("PELIGRO");
+                String data = System.currentTimeMillis() + "-Sismo MODERADO";
+                Gson gson = new Gson();
+                ArrayList<String> textList = null;
+
+                if (prefs.contains("history")) {
+                    String jsonText = prefs.getString("history", null);
+                    Log.d(TAG, "HISTORIAL: " + jsonText);
+                    textList = new ArrayList<>(Arrays.asList(gson.fromJson(jsonText, String[].class)));
+                } else {
+                    textList = new ArrayList<String>();
+                }
+
+                textList.add(data);
+                String jsonText = gson.toJson(textList);
+                Log.d(TAG, jsonText);
+                prefs.edit().putString("history", jsonText).apply();
+
                 Timer t = new Timer(false);
                 t.schedule(new TimerTask() {
                     @Override
