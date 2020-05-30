@@ -4,7 +4,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import com.jk.sismos.main.sensors.utils.SignQueue;
 
@@ -61,7 +60,7 @@ public class ShakeDetector implements SensorEventListener {
         float ax = event.values[0];
         float ay = event.values[1];
         float az = event.values[2];
-        Log.d("MEDIDA", "X:" + ax + " Y:" + ay + " Z:" + az);
+//        Log.d("MEDIDA", "X:" + ax + " Y:" + ay + " Z:" + az);
 
         final double magnitudeSquared = ax * ax + ay * ay + az * az;
 //        Log.i("MOVIMIENTO", String.valueOf(magnitudeSquared));

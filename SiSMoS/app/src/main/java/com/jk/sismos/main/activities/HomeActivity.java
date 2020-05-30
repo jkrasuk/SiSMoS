@@ -2,9 +2,9 @@ package com.jk.sismos.main.activities;
 
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -21,6 +21,9 @@ import com.jk.sismos.main.sensors.accelerometer.ShakeDetector;
 import com.jk.sismos.main.sensors.gyroscope.RotationDetector;
 import com.jk.sismos.main.sensors.light.LightDetector;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener, ShakeDetector.Listener, LightDetector.Listener, RotationDetector.Listener {
@@ -29,6 +32,9 @@ public class HomeActivity extends AppCompatActivity
     private ShakeDetector sd;
     private LightDetector ld;
     private RotationDetector rd;
+    private boolean noHayRotacion;
+    private boolean luzApagada;
+    private boolean hayMovimiento;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,17 +145,81 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void hearShake() {
-        Toast.makeText(this, "Movimiento detectado", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Movimiento detectado", Toast.LENGTH_SHORT).show();
+        this.hayMovimiento = true;
+        Timer t = new Timer(false);
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        hayMovimiento = false;
+                    }
+                });
+            }
+        }, 2000);
+        verificacionSismo();
     }
 
     @Override
     public void senseNoLight() {
-        Toast.makeText(this, "Luz apagada detectada", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Luz apagada detectada", Toast.LENGTH_SHORT).show();
+        this.luzApagada = false;
+        Timer t = new Timer(false);
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        luzApagada = false;
+                    }
+                });
+            }
+        }, 2000);
+        verificacionSismo();
     }
 
     @Override
     public void noRotation() {
-        Toast.makeText(this, "Rotación detectada", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Rotación detectada", Toast.LENGTH_SHORT).show();
+        this.noHayRotacion = true;
+        Timer t = new Timer(false);
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        noHayRotacion = false;
+                    }
+                });
+            }
+        }, 2000);
+        verificacionSismo();
+    }
+
+    public void verificacionSismo() {
+        Log.d(TAG, "noHayRotacion " + noHayRotacion + " - luzApagada " + luzApagada + " - hayMovimiento " + hayMovimiento);
+        if (noHayRotacion && luzApagada && hayMovimiento) {
+            final HomeContentFragment homeFragment = (HomeContentFragment) getSupportFragmentManager().findFragmentById(R.id.home_content);
+            if (homeFragment != null) {
+                homeFragment.setHelpText("PELIGRO");
+                Timer t = new Timer(false);
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                //Reseteo las flags
+                                homeFragment.setHelpText(getString(R.string.healthCare));
+                                noHayRotacion = false;
+                                luzApagada = false;
+                                hayMovimiento = false;
+                            }
+                        });
+                    }
+                }, 5000);
+            }
+        }
     }
 }
 
