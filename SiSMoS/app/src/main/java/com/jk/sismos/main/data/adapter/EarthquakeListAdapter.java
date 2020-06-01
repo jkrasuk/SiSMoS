@@ -28,19 +28,19 @@ public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        final Earthquake rowItem = (Earthquake) getItem(position);
+        final Earthquake rowItem = getItem(position);
 
-        LayoutInflater mInflater = (LayoutInflater) this.context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.earthquake_item, null);
             holder = new ViewHolder();
-            holder.resume = (TextView) convertView.findViewById(R.id.resume);
-            holder.datetime = (TextView) convertView.findViewById(R.id.datetime);
-            holder.placeReference = (TextView) convertView.findViewById(R.id.placeReference);
-            holder.depth = (TextView) convertView.findViewById(R.id.depth);
-            holder.distance = (TextView) convertView.findViewById(R.id.distance);
-            holder.latitude = (TextView) convertView.findViewById(R.id.latitude);
-            holder.longitude = (TextView) convertView.findViewById(R.id.longitude);
+            holder.resume = convertView.findViewById(R.id.resume);
+            holder.datetime = convertView.findViewById(R.id.datetime);
+            holder.placeReference = convertView.findViewById(R.id.placeReference);
+            holder.depth = convertView.findViewById(R.id.depth);
+            holder.distance = convertView.findViewById(R.id.distance);
+            holder.latitude = convertView.findViewById(R.id.latitude);
+            holder.longitude = convertView.findViewById(R.id.longitude);
 
             convertView.setTag(holder);
         } else {

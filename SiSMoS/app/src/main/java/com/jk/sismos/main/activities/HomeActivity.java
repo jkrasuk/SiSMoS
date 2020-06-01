@@ -248,7 +248,7 @@ public class HomeActivity extends AppCompatActivity
             //TODO Deberia agrupar los distintos sismos, utilizando el timestamp
             Log.d(TAG, jsonText);
 
-            alarmManager.startSound(this, "aAlerta.mp3", true, false);
+            alarmManager.startSound(this, "alerta.mp3", true, false);
             prefs.edit().putString("history", jsonText).apply();
         }
     }

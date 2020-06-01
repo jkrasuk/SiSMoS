@@ -25,14 +25,14 @@ public class FeltEarthquakeListAdapter extends ArrayAdapter<String> {
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        final String rowItem = (String) getItem(position);
+        final String rowItem = getItem(position);
 
-        LayoutInflater mInflater = (LayoutInflater) this.context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.felt_earthquake_item, null);
             holder = new ViewHolder();
-            holder.type = (TextView) convertView.findViewById(R.id.movementType);
-            holder.datetime = (TextView) convertView.findViewById(R.id.movementDateTime);
+            holder.type = convertView.findViewById(R.id.movementType);
+            holder.datetime = convertView.findViewById(R.id.movementDateTime);
 
             convertView.setTag(holder);
         } else {

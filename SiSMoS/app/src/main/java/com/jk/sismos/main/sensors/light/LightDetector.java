@@ -50,11 +50,7 @@ public class LightDetector implements SensorEventListener {
     private boolean isLightOff(SensorEvent event) {
         float currentLight = event.values[0];
 
-        if (currentLight < 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return currentLight < 1;
     }
 
     @Override

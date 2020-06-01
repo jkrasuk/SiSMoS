@@ -67,7 +67,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
         distanceTv.setText(distance);
         epicenter = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
 
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Detalle del sismo");
 
         return layout;

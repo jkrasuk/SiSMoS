@@ -74,8 +74,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (preferences.contains("rememberPassword")) {
-            rememberPassword.setChecked(preferences.getString("rememberPassword", null).equals("true") ? true : false);
-        }else{
+            rememberPassword.setChecked(preferences.getString("rememberPassword", null).equals("true"));
+        } else {
             rememberPassword.setChecked(false);
         }
         password.clearFocus();
@@ -109,8 +109,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (preferences.contains("rememberPassword")) {
-            rememberPassword.setChecked(preferences.getString("rememberPassword", null).equals("true") ? true : false);
-        }else{
+            rememberPassword.setChecked(preferences.getString("rememberPassword", null).equals("true"));
+        } else {
             rememberPassword.setChecked(false);
         }
 
