@@ -1,13 +1,16 @@
-package com.jk.sismos.main.sensors;
+package com.jk.sismos.main.sensors.accelerometer;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
+
+import com.jk.sismos.main.sensors.utils.SignQueue;
 
 public class ShakeDetector implements SensorEventListener {
-    private final EarthquakeSignQueue queue = new EarthquakeSignQueue();
+    private static final long MAX_WINDOW_SIZE = 250000000;
+
+    private final SignQueue queue = new SignQueue(MAX_WINDOW_SIZE);
     private final Listener listener;
 
     private SensorManager sensorManager;
@@ -15,10 +18,6 @@ public class ShakeDetector implements SensorEventListener {
 
     public ShakeDetector(Listener listener) {
         this.listener = listener;
-    }
-
-    public interface Listener {
-        void hearShake();
     }
 
     public boolean start(SensorManager sensorManager) {
@@ -37,7 +36,6 @@ public class ShakeDetector implements SensorEventListener {
         return accelerometer != null;
     }
 
-
     public void stop() {
         if (accelerometer != null) {
             queue.clear();
@@ -52,7 +50,7 @@ public class ShakeDetector implements SensorEventListener {
         boolean accelerating = isAccelerating(event);
         long timestamp = event.timestamp;
         queue.add(timestamp, accelerating);
-        if (queue.isShaking()) {
+        if (queue.isMoving()) {
             queue.clear();
             listener.hearShake();
         }
@@ -62,7 +60,7 @@ public class ShakeDetector implements SensorEventListener {
         float ax = event.values[0];
         float ay = event.values[1];
         float az = event.values[2];
-        Log.d("MEDIDA", "X:" + ax + " Y:" + ay + " Z:" + az);
+//        Log.d("MEDIDA", "X:" + ax + " Y:" + ay + " Z:" + az);
 
         final double magnitudeSquared = ax * ax + ay * ay + az * az;
 //        Log.i("MOVIMIENTO", String.valueOf(magnitudeSquared));
@@ -72,5 +70,9 @@ public class ShakeDetector implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    public interface Listener {
+        void hearShake();
     }
 }

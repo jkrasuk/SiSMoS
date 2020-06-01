@@ -23,6 +23,7 @@ public class HomeContentFragment extends Fragment {
     private static final String TAG = "HomeContent";
 
     private static final String TEXT = "text";
+    private TextView helpText;
 
     public static HomeContentFragment newInstance(String text) {
         HomeContentFragment frag = new HomeContentFragment();
@@ -42,7 +43,7 @@ public class HomeContentFragment extends Fragment {
 
         TextClock textClock = layout.findViewById(R.id.hk_time);
         textClock.setFormat24Hour("kk:mm:ss");
-        TextView helpText = layout.findViewById(R.id.helpText); //txt is object of TextView
+        this.helpText = layout.findViewById(R.id.helpText); //txt is object of TextView
         helpText.setPaintFlags(helpText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         helpText.setMovementMethod(LinkMovementMethod.getInstance());
         helpText.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +54,12 @@ public class HomeContentFragment extends Fragment {
             }
         });
         return layout;
+    }
+
+    public void setHelpText(String msg) {
+        if (helpText != null) {
+            helpText.setText(msg);
+        }
     }
 }
 

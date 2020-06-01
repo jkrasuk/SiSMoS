@@ -37,5 +37,17 @@
             android:id="@+id/distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></TextView>
+
+        <TextView
+            android:id="@+id/latitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"></TextView>
+
+        <TextView
+            android:id="@+id/longitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"></TextView>
     </LinearLayout>
 </LinearLayout>
