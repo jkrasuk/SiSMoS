@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,16 +54,65 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        final EditText email = findViewById(R.id.input_email);
+        final EditText password = findViewById(R.id.input_password);
+        final CheckBox rememberPassword = findViewById(R.id.rememberPassword);
+
+        if (preferences.contains("user")) {
+            email.setText(preferences.getString("user", null));
+        } else {
+            email.setText("");
+        }
+
+        if (preferences.contains("password")) {
+            Log.d(TAG, preferences.getString("password", null));
+            password.setText(preferences.getString("password", null));
+        } else {
+            password.setText("");
+        }
+
+        if (preferences.contains("rememberPassword")) {
+            rememberPassword.setChecked(preferences.getString("rememberPassword", null).equals("true") ? true : false);
+        }else{
+            rememberPassword.setChecked(false);
+        }
+        password.clearFocus();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         eventManager = new EventManager(this);
         final EditText email = findViewById(R.id.input_email);
         final EditText password = findViewById(R.id.input_password);
+        final CheckBox rememberPassword = findViewById(R.id.rememberPassword);
+
         Button submitBtn = findViewById(R.id.btn_login);
         TextView register = findViewById(R.id.register);
         mAPIService = ApiUtils.getAPIService();
         preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+
+        if (preferences.contains("user")) {
+            email.setText(preferences.getString("user", null));
+        } else {
+            email.setText("");
+        }
+
+        if (preferences.contains("password")) {
+            Log.d(TAG, preferences.getString("password", null));
+            password.setText(preferences.getString("password", null));
+        } else {
+            password.setText("");
+        }
+
+        if (preferences.contains("rememberPassword")) {
+            rememberPassword.setChecked(preferences.getString("rememberPassword", null).equals("true") ? true : false);
+        }else{
+            rememberPassword.setChecked(false);
+        }
 
         if (!isOnline(getApplicationContext())) {
             Toast.makeText(this, "No hay internet", Toast.LENGTH_SHORT).show();
@@ -99,9 +149,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String trimmedEmail = email.getText().toString().trim();
                 String trimmedPassword = password.getText().toString().trim();
-
+                Boolean savePassword = rememberPassword.isChecked();
+                Log.d(TAG, savePassword.toString());
                 if (!TextUtils.isEmpty(trimmedEmail) && !TextUtils.isEmpty(trimmedPassword)) {
-                    sendLogin(trimmedEmail, trimmedPassword);
+                    sendLogin(trimmedEmail, trimmedPassword, savePassword);
                 }
             }
         });
@@ -115,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void sendLogin(String email, String password) {
+    public void sendLogin(final String email, final String password, final Boolean savePassword) {
         Request request = new Request();
         request.sendLogin(email, password, new RequestCallbacks() {
             @Override
@@ -124,6 +175,18 @@ public class LoginActivity extends AppCompatActivity {
                     if (value.getState().equals("success")) {
                         Log.d(TAG, value.getToken());
                         preferences.edit().putString("token", value.getToken()).commit();
+
+                        // Recordar usuario y contraseña
+                        if (savePassword) {
+                            preferences.edit().putString("user", email).commit();
+                            preferences.edit().putString("password", password).commit();
+                            preferences.edit().putString("rememberPassword", "true").commit();
+                        } else {
+                            preferences.edit().putString("user", email).commit();
+                            preferences.edit().remove("password").commit();
+                            preferences.edit().remove("rememberPassword").commit();
+                        }
+
                         EventManager.registerEvent(Constants.LOGIN_CORRECT);
 
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);

@@ -221,7 +221,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void verificacionSismo() {
-        Log.d(TAG, "noHayRotacion " + noHayRotacion + " - luzApagada " + luzApagada + " - hayMovimiento " + hayMovimiento);
+//        Log.d(TAG, "noHayRotacion " + noHayRotacion + " - luzApagada " + luzApagada + " - hayMovimiento " + hayMovimiento);
         if (noHayRotacion && luzApagada && hayMovimiento) {
             Log.d(TAG, getCurrentFragment());
             if (!getCurrentFragment().equals("HomeAlertContentFragment")) {

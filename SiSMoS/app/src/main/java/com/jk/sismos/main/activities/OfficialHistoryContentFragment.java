@@ -2,6 +2,7 @@ package com.jk.sismos.main.activities;
 
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -120,6 +121,10 @@ public class OfficialHistoryContentFragment extends Fragment {
     }
 
     private void getDataFromINPRES() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Obteniendo datos...");
+        progressDialog.show();
         mAPIService.getEarthquakeData().enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
@@ -142,6 +147,7 @@ public class OfficialHistoryContentFragment extends Fragment {
 
                     earthquakeListAdapter = new EarthquakeListAdapter(getActivity(), feed.getEarthquakeList(), lastKnownLocation);
                     earthquakeList.setAdapter(earthquakeListAdapter);
+                    progressDialog.dismiss();
                 } else {
                     Log.i("XML ERROR", response.errorBody().toString());
                 }
