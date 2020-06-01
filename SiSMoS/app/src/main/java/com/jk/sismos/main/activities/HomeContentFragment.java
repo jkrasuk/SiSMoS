@@ -1,7 +1,6 @@
 package com.jk.sismos.main.activities;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;

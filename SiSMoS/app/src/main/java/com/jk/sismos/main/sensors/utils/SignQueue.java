@@ -9,6 +9,7 @@ public class SignQueue {
     private Sign newest;
     private int sampleCount;
     private int movingCount;
+
     public SignQueue(long maxWindowSize) {
         this.maxWindowSize = maxWindowSize;
         this.minWindowSize = maxWindowSize >> 1;

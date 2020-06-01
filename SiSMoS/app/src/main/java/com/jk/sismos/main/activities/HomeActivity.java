@@ -22,6 +22,7 @@ import com.jk.sismos.R;
 import com.jk.sismos.main.sensors.accelerometer.ShakeDetector;
 import com.jk.sismos.main.sensors.gyroscope.RotationDetector;
 import com.jk.sismos.main.sensors.light.LightDetector;
+import com.jk.sismos.main.utils.AlarmManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ public class HomeActivity extends AppCompatActivity
     private boolean luzApagada;
     private boolean hayMovimiento;
     private SharedPreferences prefs;
+    private AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        alarmManager = new AlarmManager();
         prefs = getSharedPreferences("preferences", MODE_PRIVATE);
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -236,6 +239,8 @@ public class HomeActivity extends AppCompatActivity
                 String jsonText = gson.toJson(textList);
                 //TODO Deberia agrupar los distintos sismos, utilizando el timestamp
                 Log.d(TAG, jsonText);
+
+                alarmManager.startSound(this, "alerta.mp3", false, false);
                 prefs.edit().putString("history", jsonText).apply();
 
                 Timer t = new Timer(false);

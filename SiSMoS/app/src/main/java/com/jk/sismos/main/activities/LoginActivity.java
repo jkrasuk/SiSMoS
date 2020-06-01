@@ -115,7 +115,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // TODO: La última vez que ejecute me tiraba "Error de autenticación", capaz que faltan campos
     public void sendLogin(String email, String password) {
         Request request = new Request();
         request.sendLogin(email, password, new RequestCallbacks() {
