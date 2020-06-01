@@ -12,11 +12,24 @@ import static android.content.Context.AUDIO_SERVICE;
 public class AlarmManager implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
     private final MediaPlayer mPlayer;
     private int mVolumeLevel = -1;
+    private static AlarmManager singleInstance = null;
 
     public AlarmManager() {
         mPlayer = new MediaPlayer();
         mPlayer.setOnPreparedListener(this);
         mPlayer.setOnCompletionListener(this);
+    }
+
+    public static AlarmManager getInstance()
+    {
+        if (singleInstance == null)
+            singleInstance = new AlarmManager();
+
+        return singleInstance;
+    }
+    public void stopSound(){
+        mPlayer.stop();
+        mPlayer.reset();
     }
 
     public void startSound(Context context, String soundName, Boolean repeat, Boolean interruptPreviousSound) {

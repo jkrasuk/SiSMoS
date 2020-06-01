@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        alarmManager = new AlarmManager();
+        alarmManager = AlarmManager.getInstance();
         prefs = getSharedPreferences("preferences", MODE_PRIVATE);
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -216,49 +216,40 @@ public class HomeActivity extends AppCompatActivity
         verificacionSismo();
     }
 
+    public String getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(R.id.home_content).getClass().getSimpleName();
+    }
+
     public void verificacionSismo() {
         Log.d(TAG, "noHayRotacion " + noHayRotacion + " - luzApagada " + luzApagada + " - hayMovimiento " + hayMovimiento);
         if (noHayRotacion && luzApagada && hayMovimiento) {
-            //TODO como esta actualmente, solamente funciona cuando esta en home. Deberia poder ir desde cualquier pantalla
-            final HomeContentFragment homeFragment = (HomeContentFragment) getSupportFragmentManager().findFragmentById(R.id.home_content);
-            if (homeFragment != null) {
-                homeFragment.setHelpText("PELIGRO");
-                String data = System.currentTimeMillis() + "-Sismo MODERADO";
-                Gson gson = new Gson();
-                ArrayList<String> textList = null;
-
-                if (prefs.contains("history")) {
-                    String jsonText = prefs.getString("history", null);
-                    Log.d(TAG, "HISTORIAL: " + jsonText);
-                    textList = new ArrayList<>(Arrays.asList(gson.fromJson(jsonText, String[].class)));
-                } else {
-                    textList = new ArrayList<String>();
-                }
-
-                textList.add(data);
-                String jsonText = gson.toJson(textList);
-                //TODO Deberia agrupar los distintos sismos, utilizando el timestamp
-                Log.d(TAG, jsonText);
-
-                alarmManager.startSound(this, "alerta.mp3", false, false);
-                prefs.edit().putString("history", jsonText).apply();
-
-                Timer t = new Timer(false);
-                t.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                //Reseteo las flags
-                                homeFragment.setHelpText(getString(R.string.healthCare));
-                                noHayRotacion = false;
-                                luzApagada = false;
-                                hayMovimiento = false;
-                            }
-                        });
-                    }
-                }, 5000);
+            Log.d(TAG, getCurrentFragment());
+            if (!getCurrentFragment().equals("HomeAlertContentFragment")) {
+                Fragment fragment = HomeAlertContentFragment.newInstance(getString(R.string.menu_home));
+                FragmentManager fragmentAlertModeManager = getSupportFragmentManager();
+                fragmentAlertModeManager.beginTransaction().replace(R.id.home_content, fragment).commit();
+                setTitle("Póngase a salvo!");
             }
+
+            String data = System.currentTimeMillis() + "-Sismo MODERADO";
+            Gson gson = new Gson();
+            ArrayList<String> textList = null;
+
+            if (prefs.contains("history")) {
+                String jsonText = prefs.getString("history", null);
+                Log.d(TAG, "HISTORIAL: " + jsonText);
+                textList = new ArrayList<>(Arrays.asList(gson.fromJson(jsonText, String[].class)));
+            } else {
+                textList = new ArrayList<String>();
+            }
+
+            textList.add(data);
+            String jsonText = gson.toJson(textList);
+            //TODO Deberia agrupar los distintos sismos, utilizando el timestamp
+            Log.d(TAG, jsonText);
+
+            alarmManager.startSound(this, "aAlerta.mp3", true, false);
+            prefs.edit().putString("history", jsonText).apply();
         }
     }
 }
