@@ -151,7 +151,6 @@ public class HomeActivity extends AppCompatActivity
                         .commit();
                 break;
             case R.string.exit:
-                EventManager.registerEvent(Constants.LOGOUT_CORRECT);
                 finish();
                 break;
         }
