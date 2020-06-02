@@ -100,6 +100,15 @@ public class HomeActivity extends AppCompatActivity
         unregisterReceiver(myReceiver);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Fragment fragment = HomeContentFragment.newInstance();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.home_content, fragment, "home").commit();
+    }
+
     public Fragment getVisibleFragment() {
         FragmentManager fragmentManager = HomeActivity.this.getSupportFragmentManager();
         List<Fragment> fragments = fragmentManager.getFragments();

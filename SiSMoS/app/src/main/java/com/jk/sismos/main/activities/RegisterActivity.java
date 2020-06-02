@@ -164,7 +164,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         String regex = "\\d+";
-        if (dni.isEmpty() || dni.length() < 7 || password.length() > 8 || !dni.matches(regex)) {
+        if (dni.isEmpty() || dni.length() < 7 || dni.length() > 8 || !dni.matches(regex)) {
             _dniText.setError("Ingrese un DNI válido");
             valid = false;
         } else {
