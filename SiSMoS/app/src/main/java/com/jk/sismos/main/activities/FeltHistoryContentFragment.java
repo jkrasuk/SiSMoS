@@ -3,7 +3,6 @@ package com.jk.sismos.main.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.ListView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.jk.sismos.R;
 import com.jk.sismos.main.data.adapter.FeltEarthquakeListAdapter;
@@ -24,20 +24,15 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class FeltHistoryContentFragment extends Fragment {
-
     private static final String TAG = "FeltHistory";
-    private static final String TEXT = "text";
+
     private ListView feltEarthquakeList;
     private FeltEarthquakeListAdapter feltEarthquakeListAdapter;
     private SharedPreferences prefs;
+    private ArrayList<String> feltEarthquakes = null;
 
-    public static FeltHistoryContentFragment newInstance(String text) {
+    public static FeltHistoryContentFragment newInstance() {
         FeltHistoryContentFragment frag = new FeltHistoryContentFragment();
-
-        Bundle args = new Bundle();
-        args.putString(TEXT, text);
-        frag.setArguments(args);
-
         return frag;
     }
 
@@ -46,8 +41,7 @@ public class FeltHistoryContentFragment extends Fragment {
             Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.activity_felt_history, container, false);
         prefs = getActivity().getSharedPreferences("preferences", MODE_PRIVATE);
-
-        ArrayList<String> feltEarthquakes = null;
+        
         Gson gson = new Gson();
 
         if (prefs.contains("history")) {
@@ -56,11 +50,22 @@ public class FeltHistoryContentFragment extends Fragment {
         } else {
             feltEarthquakes = new ArrayList<String>();
         }
+
         //Sismos más recientes primero
         Collections.reverse(feltEarthquakes);
         feltEarthquakeList = layout.findViewById(R.id.feltEarthquakeList);
         feltEarthquakeListAdapter = new FeltEarthquakeListAdapter(getActivity(), feltEarthquakes);
         feltEarthquakeList.setAdapter(feltEarthquakeListAdapter);
+
+
+        FloatingActionButton fabDeleteButton = layout.findViewById(R.id.fabDeleteButton);
+        fabDeleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                prefs.edit().remove("history").commit();
+                feltEarthquakes.clear();
+                feltEarthquakeListAdapter.notifyDataSetChanged();
+            }
+        });
 
         return layout;
     }

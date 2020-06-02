@@ -62,7 +62,7 @@ public class RotationDetector implements SensorEventListener {
         float az = event.values[2];
 //        Log.d("MEDIDA GISROCOPIO", "X:" + ax + " Y:" + ay + " Z:" + az);
 
-        final double magnitude = ax * ax + ay * ay + az * az;
+        double magnitude = ax * ax + ay * ay + az * az;
         return !(magnitude < 0.0005);
     }
 

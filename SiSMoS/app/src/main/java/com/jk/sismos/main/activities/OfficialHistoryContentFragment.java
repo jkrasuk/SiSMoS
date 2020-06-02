@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -27,6 +28,9 @@ import com.jk.sismos.main.data.model.inpresList.Earthquake;
 import com.jk.sismos.main.data.model.inpresList.Feed;
 import com.jk.sismos.main.data.remoteXML.APIService;
 import com.jk.sismos.main.data.remoteXML.ApiUtils;
+import com.jk.sismos.main.utils.Constants;
+import com.jk.sismos.main.utils.DeviceUtils;
+import com.jk.sismos.main.utils.EventManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,22 +38,16 @@ import retrofit2.Response;
 
 
 public class OfficialHistoryContentFragment extends Fragment {
-
     private static final String TAG = "OfficialHistory";
-    private static final String TEXT = "text";
+
     private ListView earthquakeList;
     private APIService mAPIService;
     private EarthquakeListAdapter earthquakeListAdapter;
     private FusedLocationProviderClient fusedLocationClient;
     private Location lastKnownLocation;
 
-    public static OfficialHistoryContentFragment newInstance(String text) {
+    public static OfficialHistoryContentFragment newInstance() {
         OfficialHistoryContentFragment frag = new OfficialHistoryContentFragment();
-
-        Bundle args = new Bundle();
-        args.putString(TEXT, text);
-        frag.setArguments(args);
-
         return frag;
     }
 
@@ -102,15 +100,18 @@ public class OfficialHistoryContentFragment extends Fragment {
                     .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 lastKnownLocation = location;
+                                EventManager.registerEvent(Constants.GPS_ACQUIRED);
                             }
                         }
                     });
         }
-
-        getDataFromINPRES();
+        if (DeviceUtils.isDeviceOnline(getActivity())) {
+            getDataFromINPRES();
+        } else {
+            Toast.makeText(getActivity(), "No hay internet", Toast.LENGTH_SHORT).show();
+        }
         return layout;
     }
 
@@ -124,6 +125,7 @@ public class OfficialHistoryContentFragment extends Fragment {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Obteniendo datos...");
         progressDialog.show();
+        EventManager.registerEvent(Constants.GET_INPRES_DATA_ACTIVATED);
         mAPIService.getEarthquakeData().enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
@@ -150,12 +152,14 @@ public class OfficialHistoryContentFragment extends Fragment {
                 } else {
                     Log.i("XML ERROR", response.errorBody().toString());
                 }
+                EventManager.registerEvent(Constants.GET_INPRES_DATA_FINISHED);
+
             }
 
             @Override
             public void onFailure(Call<Feed> call, Throwable t) {
                 Log.e(TAG, "Error al enviar el request.");
-
+                EventManager.registerEvent(Constants.GET_INPRES_DATA_FINISHED);
             }
         });
     }

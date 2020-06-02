@@ -19,31 +19,27 @@ import com.jk.sismos.R;
 
 
 public class HomeContentFragment extends Fragment {
-
     private static final String TAG = "HomeContent";
-
-    private static final String TEXT = "text";
     private TextView helpText;
 
-    public static HomeContentFragment newInstance(String text) {
+    public static HomeContentFragment newInstance() {
         HomeContentFragment frag = new HomeContentFragment();
-
-        Bundle args = new Bundle();
-        args.putString(TEXT, text);
-        frag.setArguments(args);
-
         return frag;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
             Bundle savedInstanceState) {
+
         // Pongo por default ese contenido
         View layout = inflater.inflate(R.layout.activity_home_content, container, false);
 
         TextClock textClock = layout.findViewById(R.id.hk_time);
+        // Formato del reloj
         textClock.setFormat24Hour("kk:mm:ss");
-        this.helpText = layout.findViewById(R.id.helpText); //txt is object of TextView
+
+        // Distintos metodos utilizados para poder convertir el textView en un href
+        helpText = layout.findViewById(R.id.helpText);
         helpText.setPaintFlags(helpText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         helpText.setMovementMethod(LinkMovementMethod.getInstance());
         helpText.setOnClickListener(new View.OnClickListener() {
@@ -54,12 +50,6 @@ public class HomeContentFragment extends Fragment {
             }
         });
         return layout;
-    }
-
-    public void setHelpText(String msg) {
-        if (helpText != null) {
-            helpText.setText(msg);
-        }
     }
 }
 

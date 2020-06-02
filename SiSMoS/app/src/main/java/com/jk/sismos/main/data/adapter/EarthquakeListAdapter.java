@@ -81,8 +81,5 @@ public class EarthquakeListAdapter extends ArrayAdapter<Earthquake> {
         TextView distance;
         TextView latitude;
         TextView longitude;
-
-        private ViewHolder() {
-        }
     }
 }

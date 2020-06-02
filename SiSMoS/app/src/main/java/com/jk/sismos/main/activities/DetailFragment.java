@@ -16,16 +16,12 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jk.sismos.R;
 
 public class DetailFragment extends Fragment implements OnMapReadyCallback {
-
-
     private static final String TAG = "DetailFragment";
 
-    private static final String TEXT = "text";
     MapView mapView;
     GoogleMap googleMap;
     TextView dateTimeTv;
@@ -81,7 +77,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             googleMap.setMyLocationEnabled(true);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(epicenter, 10.0f));
-            Marker marker = googleMap.addMarker(new MarkerOptions()
+            googleMap.addMarker(new MarkerOptions()
                     .position(epicenter).title("Epicentro")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     .draggable(false).visible(true));

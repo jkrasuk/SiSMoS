@@ -20,6 +20,8 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.navigation.NavigationView;
 import com.jk.sismos.R;
 import com.jk.sismos.main.service.ShakeService;
+import com.jk.sismos.main.utils.Constants;
+import com.jk.sismos.main.utils.EventManager;
 
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class HomeActivity extends AppCompatActivity
     };
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,8 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        Intent intent = new Intent(this, ShakeService.class);
-        startService(intent);
+        serviceIntent = new Intent(this, ShakeService.class);
+        startService(serviceIntent);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,6 +70,7 @@ public class HomeActivity extends AppCompatActivity
 
         IntentFilter intentFilter = new IntentFilter("earthquake");
         registerReceiver(myReceiver, intentFilter);
+        EventManager.registerEvent(Constants.SERVICE_ACTIVATED);
     }
 
     @Override
@@ -85,7 +89,16 @@ public class HomeActivity extends AppCompatActivity
                 navigationView.getMenu().getItem(2).setChecked(true);
                 setTitle(getString(R.string.menu_inpres));
             }
+            EventManager.registerEvent(Constants.LOGOUT_CORRECT);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //Detengo el servicio
+        stopService(serviceIntent);
+        unregisterReceiver(myReceiver);
     }
 
     public Fragment getVisibleFragment() {
@@ -123,22 +136,23 @@ public class HomeActivity extends AppCompatActivity
             default:
             case R.string.menu_home:
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                Fragment fragment = HomeContentFragment.newInstance(getString(R.string.menu_home));
+                Fragment fragment = HomeContentFragment.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.home_content, fragment, "home").commit();
                 break;
             case R.string.menu_history:
-                Fragment fragmentFeltHistory = FeltHistoryContentFragment.newInstance(getString(title));
+                Fragment fragmentFeltHistory = FeltHistoryContentFragment.newInstance();
                 FragmentManager fragmentFeltHistoryManager = getSupportFragmentManager();
                 fragmentFeltHistoryManager.beginTransaction().replace(R.id.home_content, fragmentFeltHistory, "history").addToBackStack("home").commit();
                 break;
             case R.string.menu_inpres:
-                Fragment fragmentHistory = OfficialHistoryContentFragment.newInstance(getString(title));
+                Fragment fragmentHistory = OfficialHistoryContentFragment.newInstance();
                 FragmentManager fragmentHistoryManager = getSupportFragmentManager();
                 fragmentHistoryManager.beginTransaction().replace(R.id.home_content, fragmentHistory, "official-history").addToBackStack("home")
                         .commit();
                 break;
             case R.string.exit:
+                EventManager.registerEvent(Constants.LOGOUT_CORRECT);
                 finish();
                 break;
         }

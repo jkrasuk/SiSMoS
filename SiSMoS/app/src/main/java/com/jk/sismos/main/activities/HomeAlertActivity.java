@@ -9,9 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.jk.sismos.R;
 import com.jk.sismos.main.utils.AlarmManager;
+import com.jk.sismos.main.utils.Constants;
+import com.jk.sismos.main.utils.EventManager;
 
 public class HomeAlertActivity extends AppCompatActivity {
-    private static final String TAG = "HomeAlertActivity";
     private AlarmManager alarmManager;
 
     @Override
@@ -23,10 +24,12 @@ public class HomeAlertActivity extends AppCompatActivity {
 
         Button stopAlarmBtn = findViewById(R.id.btn_stop_alarm);
 
+        // Al tocar el boton de stop, se detiene la alarma y se inicia la activity del home, reiniciando el ciclo
         stopAlarmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alarmManager.stopSound();
+                EventManager.registerEvent(Constants.EARTHQUAKE_DETECTED_FINISHED);
                 Intent i = new Intent(getBaseContext(), HomeActivity.class);
                 startActivity(i);
                 finish();

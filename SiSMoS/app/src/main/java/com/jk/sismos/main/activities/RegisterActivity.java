@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.jk.sismos.R;
 import com.jk.sismos.main.data.remote.Request;
+import com.jk.sismos.main.utils.DeviceUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,7 +63,6 @@ public class RegisterActivity extends AppCompatActivity {
         _loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
                 finish();
             }
         });
@@ -107,7 +107,6 @@ public class RegisterActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         onSignupSuccess();
-                        // onSignupFailed();
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -127,8 +126,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void sendRegister(String name, String surname, String dni, String email, String password) {
-        Request request = new Request();
-        request.sendRegister(name, surname, dni, email, password);
+        if(DeviceUtils.isDeviceOnline(this)) {
+            Request request = new Request();
+            request.sendRegister(name, surname, dni, email, password);
+        } else{
+            Toast.makeText(this, "No hay internet", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public boolean validate() {

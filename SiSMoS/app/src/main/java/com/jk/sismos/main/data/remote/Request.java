@@ -1,9 +1,12 @@
 package com.jk.sismos.main.data.remote;
 
+import android.util.EventLog;
 import android.util.Log;
 
 import com.jk.sismos.main.data.model.event.EventPost;
 import com.jk.sismos.main.data.model.user.UserPost;
+import com.jk.sismos.main.utils.Constants;
+import com.jk.sismos.main.utils.EventManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,9 +53,10 @@ public class Request {
             @Override
             public void onResponse(Call<UserPost> call, Response<UserPost> response) {
                 if (response.isSuccessful()) {
+                    EventManager.registerEvent(Constants.USER_REGISTERED);
                     showResponse(response.body().toString());
                 } else {
-
+                    EventManager.registerEvent(Constants.USER_COULDNT_REGISTER);
                     Log.i(TAG, "Ocurrió un error.");
                 }
             }
@@ -60,6 +64,7 @@ public class Request {
             @Override
             public void onFailure(Call<UserPost> call, Throwable t) {
                 Log.e(TAG, "Error al enviar el request.");
+                EventManager.registerEvent(Constants.USER_COULDNT_REGISTER);
             }
         });
     }

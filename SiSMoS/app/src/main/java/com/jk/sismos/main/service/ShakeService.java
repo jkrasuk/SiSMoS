@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -16,6 +15,8 @@ import com.jk.sismos.main.sensors.accelerometer.ShakeDetector;
 import com.jk.sismos.main.sensors.gyroscope.RotationDetector;
 import com.jk.sismos.main.sensors.light.LightDetector;
 import com.jk.sismos.main.utils.AlarmManager;
+import com.jk.sismos.main.utils.Constants;
+import com.jk.sismos.main.utils.EventManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,8 +119,6 @@ public class ShakeService extends Service implements ShakeDetector.Listener, Lig
                 sendBroadcast(retIntent);
             }
 
-
-            String data = System.currentTimeMillis() + "-Movimiento detectado";
             Gson gson = new Gson();
             ArrayList<String> textList = null;
 
@@ -131,14 +130,31 @@ public class ShakeService extends Service implements ShakeDetector.Listener, Lig
                 textList = new ArrayList<String>();
             }
 
-            textList.add(data);
-            String jsonText = gson.toJson(textList);
-            //TODO Deberia agrupar los distintos sismos, utilizando el timestamp
-            Log.d(TAG, jsonText);
+            if (textList.size() > 0) {
+                //Compruebo cuando sucedio el ultimo, para diferenciar si se trata o no del mismo evento
+                String item = textList.get(textList.size() - 1);
+                long lastEpochTime = Long.parseLong(item.split("-")[0]);
+                long actualTime = System.currentTimeMillis();
 
+                //Si el ultimo registro fue hace menos de un minuto, se trata del mismo evento
+                if (actualTime - lastEpochTime > 30 * 1000) {
+                    crearRegistro(textList, gson);
+                }
+            } else {
+                crearRegistro(textList, gson);
+            }
             alarmManager.startSound(this, "alerta.mp3", true, false);
-            prefs.edit().putString("history", jsonText).apply();
         }
+    }
+
+    public void crearRegistro(ArrayList<String> list, Gson gson) {
+        //Creo un nuevo registro
+        long actualTime = System.currentTimeMillis();
+        String data = actualTime + "-Movimiento detectado";
+        list.add(data);
+        String jsonText = gson.toJson(list);
+        prefs.edit().putString("history", jsonText).apply();
+        EventManager.registerEvent(Constants.EARTHQUAKE_DETECTED);
     }
 
 
