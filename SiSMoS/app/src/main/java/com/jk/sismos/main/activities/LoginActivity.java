@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onError(@NonNull Throwable throwable) {
-                Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecta", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Ocurrio un error: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override

@@ -1,9 +1,10 @@
 package com.jk.sismos.main.activities;
 
-import android.content.SharedPreferences;
-import android.hardware.SensorManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,31 +18,23 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
 import com.jk.sismos.R;
-import com.jk.sismos.main.sensors.accelerometer.ShakeDetector;
-import com.jk.sismos.main.sensors.gyroscope.RotationDetector;
-import com.jk.sismos.main.sensors.light.LightDetector;
-import com.jk.sismos.main.utils.AlarmManager;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
+import com.jk.sismos.main.service.ShakeService;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        DrawerLayout.DrawerListener, ShakeDetector.Listener, LightDetector.Listener, RotationDetector.Listener {
+        DrawerLayout.DrawerListener {
     private static final String TAG = "HomeActivity";
+    private final BroadcastReceiver myReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("earthquake")) {
+                Intent i = new Intent(context, HomeAlertActivity.class);
+                context.startActivity(i);
+            }
+        }
+    };
     private DrawerLayout drawerLayout;
-    private ShakeDetector sd;
-    private LightDetector ld;
-    private RotationDetector rd;
-    private boolean noHayRotacion;
-    private boolean luzApagada;
-    private boolean hayMovimiento;
-    private SharedPreferences prefs;
-    private AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +42,9 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        alarmManager = AlarmManager.getInstance();
-        prefs = getSharedPreferences("preferences", MODE_PRIVATE);
+
+        Intent intent = new Intent(this, ShakeService.class);
+        startService(intent);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -68,26 +62,14 @@ public class HomeActivity extends AppCompatActivity
 
         drawerLayout.addDrawerListener(this);
 
-        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sd = new ShakeDetector(this);
-        sd.start(sensorManager);
-
-        ld = new LightDetector(this);
-        ld.start(sensorManager);
-
-        rd = new RotationDetector(this);
-        rd.start(sensorManager);
+        IntentFilter intentFilter = new IntentFilter("earthquake");
+        registerReceiver(myReceiver, intentFilter);
     }
 
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-            sd.stop();
-            ld.stop();
-            rd.stop();
         }
     }
 
@@ -161,96 +143,4 @@ public class HomeActivity extends AppCompatActivity
     public void onDrawerStateChanged(int i) {
         //cambio de estado, puede ser STATE_IDLE, STATE_DRAGGING or STATE_SETTLING
     }
-
-    @Override
-    public void hearShake() {
-//        Toast.makeText(this, "Movimiento detectado", Toast.LENGTH_SHORT).show();
-        this.hayMovimiento = true;
-        Timer t = new Timer(false);
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        hayMovimiento = false;
-                    }
-                });
-            }
-        }, 2000);
-        verificacionSismo();
-    }
-
-    @Override
-    public void senseNoLight() {
-//        Toast.makeText(this, "Luz apagada detectada", Toast.LENGTH_SHORT).show();
-        this.luzApagada = true;
-        Timer t = new Timer(false);
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        luzApagada = false;
-                    }
-                });
-            }
-        }, 2000);
-        verificacionSismo();
-    }
-
-    @Override
-    public void noRotation() {
-//        Toast.makeText(this, "Rotación detectada", Toast.LENGTH_SHORT).show();
-        this.noHayRotacion = true;
-        Timer t = new Timer(false);
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        noHayRotacion = false;
-                    }
-                });
-            }
-        }, 2000);
-        verificacionSismo();
-    }
-
-    public String getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentById(R.id.home_content).getClass().getSimpleName();
-    }
-
-    public void verificacionSismo() {
-//        Log.d(TAG, "noHayRotacion " + noHayRotacion + " - luzApagada " + luzApagada + " - hayMovimiento " + hayMovimiento);
-        if (noHayRotacion && luzApagada && hayMovimiento) {
-            Log.d(TAG, getCurrentFragment());
-            if (!getCurrentFragment().equals("HomeAlertContentFragment")) {
-                Fragment fragment = HomeAlertContentFragment.newInstance(getString(R.string.menu_home));
-                FragmentManager fragmentAlertModeManager = getSupportFragmentManager();
-                fragmentAlertModeManager.beginTransaction().replace(R.id.home_content, fragment).commit();
-                setTitle("Póngase a salvo!");
-            }
-
-            String data = System.currentTimeMillis() + "-Sismo MODERADO";
-            Gson gson = new Gson();
-            ArrayList<String> textList = null;
-
-            if (prefs.contains("history")) {
-                String jsonText = prefs.getString("history", null);
-                Log.d(TAG, "HISTORIAL: " + jsonText);
-                textList = new ArrayList<>(Arrays.asList(gson.fromJson(jsonText, String[].class)));
-            } else {
-                textList = new ArrayList<String>();
-            }
-
-            textList.add(data);
-            String jsonText = gson.toJson(textList);
-            //TODO Deberia agrupar los distintos sismos, utilizando el timestamp
-            Log.d(TAG, jsonText);
-
-            alarmManager.startSound(this, "alerta.mp3", true, false);
-            prefs.edit().putString("history", jsonText).apply();
-        }
-    }
 }
-
