@@ -68,7 +68,6 @@ public class FeltHistoryContentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "Volvi");
     }
 
 }

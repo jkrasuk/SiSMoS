@@ -67,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (preferences.contains("password")) {
-            Log.d(TAG, preferences.getString("password", null));
             password.setText(preferences.getString("password", null));
         } else {
             password.setText("");
@@ -102,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (preferences.contains("password")) {
-            Log.d(TAG, preferences.getString("password", null));
             password.setText(preferences.getString("password", null));
         } else {
             password.setText("");
@@ -150,7 +148,6 @@ public class LoginActivity extends AppCompatActivity {
                 String trimmedEmail = email.getText().toString().trim();
                 String trimmedPassword = password.getText().toString().trim();
                 Boolean savePassword = rememberPassword.isChecked();
-                Log.d(TAG, savePassword.toString());
                 if (!TextUtils.isEmpty(trimmedEmail) && !TextUtils.isEmpty(trimmedPassword)) {
                     sendLogin(trimmedEmail, trimmedPassword, savePassword);
                 }
@@ -173,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(@NonNull UserPost value) {
                 if (value != null) {
                     if (value.getState().equals("success")) {
-                        Log.d(TAG, value.getToken());
+//                        Log.d(TAG, value.getToken());
                         preferences.edit().putString("token", value.getToken()).commit();
 
                         // Recordar usuario y contraseña
@@ -192,7 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);
                     } else {
-                        Log.d(TAG, value.toString());
+//                        Log.d(TAG, value.toString());
                         Toast.makeText(getApplicationContext(), value.getMsg(), Toast.LENGTH_LONG).show();
                     }
                 }
@@ -213,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         UserPost errorResponse = gson.fromJson(mJson, UserPost.class);
 
-                        Log.d(TAG, errorResponse.getMsg());
+//                        Log.d(TAG, errorResponse.getMsg());
                         Toast.makeText(getApplicationContext(), errorResponse.getMsg(), Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
                         e.printStackTrace();

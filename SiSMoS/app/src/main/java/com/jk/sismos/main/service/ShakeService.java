@@ -102,7 +102,7 @@ public class ShakeService extends Service implements ShakeDetector.Listener, Lig
 
 
     public void verificacionSismo() {
-        Log.d(TAG, "noHayRotacion " + noHayRotacion + " - luzApagada " + luzApagada + " - hayMovimiento " + hayMovimiento);
+//        Log.d(TAG, "noHayRotacion " + noHayRotacion + " - luzApagada " + luzApagada + " - hayMovimiento " + hayMovimiento);
 
         if (noHayRotacion && luzApagada && hayMovimiento) {
             PackageManager packageManager = getApplicationContext().getPackageManager();
@@ -119,13 +119,13 @@ public class ShakeService extends Service implements ShakeDetector.Listener, Lig
             }
 
 
-            String data = System.currentTimeMillis() + "-Sismo MODERADO";
+            String data = System.currentTimeMillis() + "-Movimiento detectado";
             Gson gson = new Gson();
             ArrayList<String> textList = null;
 
             if (prefs.contains("history")) {
                 String jsonText = prefs.getString("history", null);
-                Log.d(TAG, "HISTORIAL: " + jsonText);
+//                Log.d(TAG, "HISTORIAL: " + jsonText);
                 textList = new ArrayList<>(Arrays.asList(gson.fromJson(jsonText, String[].class)));
             } else {
                 textList = new ArrayList<String>();

@@ -88,7 +88,7 @@ public class OfficialHistoryContentFragment extends Fragment {
 
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.home_content, nextFrag, "detailFragment")
-                        .addToBackStack(null)
+                        .addToBackStack("official-history")
                         .commit();
             }
         });
@@ -117,7 +117,6 @@ public class OfficialHistoryContentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "Volvi");
     }
 
     private void getDataFromINPRES() {

@@ -21,6 +21,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.jk.sismos.R;
 import com.jk.sismos.main.service.ShakeService;
 
+import java.util.List;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DrawerLayout.DrawerListener {
@@ -35,6 +37,7 @@ public class HomeActivity extends AppCompatActivity
         }
     };
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class HomeActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.navigation_view);
+        this.navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         MenuItem menuItem = navigationView.getMenu().getItem(0);
@@ -70,7 +73,31 @@ public class HomeActivity extends AppCompatActivity
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+            if (getVisibleFragment().getTag().equals("home")) {
+                navigationView.getMenu().getItem(0).setChecked(true);
+                setTitle(getString(R.string.menu_home));
+
+            } else if (getVisibleFragment().getTag().equals("official-history")) {
+                navigationView.getMenu().getItem(2).setChecked(true);
+                setTitle(getString(R.string.menu_inpres));
+            }
         }
+    }
+
+    public Fragment getVisibleFragment() {
+        FragmentManager fragmentManager = HomeActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment.isVisible())
+                    return fragment;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -92,23 +119,24 @@ public class HomeActivity extends AppCompatActivity
             default:
                 throw new IllegalArgumentException("menu option not implemented!!");
         }
-
         switch (title) {
             default:
             case R.string.menu_home:
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 Fragment fragment = HomeContentFragment.newInstance(getString(R.string.menu_home));
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.home_content, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.home_content, fragment, "home").commit();
                 break;
             case R.string.menu_history:
                 Fragment fragmentFeltHistory = FeltHistoryContentFragment.newInstance(getString(title));
                 FragmentManager fragmentFeltHistoryManager = getSupportFragmentManager();
-                fragmentFeltHistoryManager.beginTransaction().replace(R.id.home_content, fragmentFeltHistory).commit();
+                fragmentFeltHistoryManager.beginTransaction().replace(R.id.home_content, fragmentFeltHistory, "history").addToBackStack("home").commit();
                 break;
             case R.string.menu_inpres:
                 Fragment fragmentHistory = OfficialHistoryContentFragment.newInstance(getString(title));
                 FragmentManager fragmentHistoryManager = getSupportFragmentManager();
-                fragmentHistoryManager.beginTransaction().replace(R.id.home_content, fragmentHistory).commit();
+                fragmentHistoryManager.beginTransaction().replace(R.id.home_content, fragmentHistory, "official-history").addToBackStack("home")
+                        .commit();
                 break;
             case R.string.exit:
                 finish();
