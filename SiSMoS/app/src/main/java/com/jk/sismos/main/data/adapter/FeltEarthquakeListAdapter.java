@@ -52,8 +52,5 @@ public class FeltEarthquakeListAdapter extends ArrayAdapter<String> {
     private class ViewHolder {
         TextView type;
         TextView datetime;
-
-        private ViewHolder() {
-        }
     }
 }

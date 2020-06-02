@@ -62,9 +62,8 @@ public class ShakeDetector implements SensorEventListener {
         float az = event.values[2];
 //        Log.d("MEDIDA", "X:" + ax + " Y:" + ay + " Z:" + az);
 
-        final double magnitudeSquared = ax * ax + ay * ay + az * az;
-//        Log.i("MOVIMIENTO", String.valueOf(magnitudeSquared));
-        return /*((az >= 9.67) && (az <= 9.8)) &&*/ magnitudeSquared > 95.5;
+        double magnitudeSquared = ax * ax + ay * ay + az * az;
+        return magnitudeSquared > 95.5;
     }
 
     @Override

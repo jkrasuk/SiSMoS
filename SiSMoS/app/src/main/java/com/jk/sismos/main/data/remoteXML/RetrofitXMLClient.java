@@ -11,7 +11,7 @@ public class RetrofitXMLClient {
 
     public static Retrofit getClient(String baseUrl) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         CustomEncodingInterceptor customEncodingInterceptor = new CustomEncodingInterceptor();
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(customEncodingInterceptor).build();
 

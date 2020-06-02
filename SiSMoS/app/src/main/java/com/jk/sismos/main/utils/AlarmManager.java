@@ -50,7 +50,6 @@ public class AlarmManager implements MediaPlayer.OnPreparedListener, MediaPlayer
             mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
             mPlayer.stop();
             mPlayer.reset();
-            mPlayer.reset();
             mPlayer.setLooping(repeat);
             mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             mPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
