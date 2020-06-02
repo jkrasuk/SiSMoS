@@ -84,18 +84,17 @@ public class HomeActivity extends AppCompatActivity
             if (getVisibleFragment().getTag().equals("home")) {
                 navigationView.getMenu().getItem(0).setChecked(true);
                 setTitle(getString(R.string.menu_home));
-
             } else if (getVisibleFragment().getTag().equals("official-history")) {
                 navigationView.getMenu().getItem(2).setChecked(true);
                 setTitle(getString(R.string.menu_inpres));
             }
-            EventManager.registerEvent(Constants.LOGOUT_CORRECT);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventManager.registerEvent(Constants.LOGOUT_CORRECT);
         //Detengo el servicio
         stopService(serviceIntent);
         unregisterReceiver(myReceiver);

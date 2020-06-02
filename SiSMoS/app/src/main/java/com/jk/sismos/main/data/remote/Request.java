@@ -15,7 +15,7 @@ import retrofit2.Response;
 public class Request {
     private final static Integer GROUP = 614;
     private final static Integer COMMISION = 2900;
-    private final static String ENV = "TEST";
+    private final static String ENV = "DEV";
     private final static String TAG = "REQUEST";
     private APIService mAPIService;
 

@@ -72,7 +72,6 @@ public class OfficialHistoryContentFragment extends Fragment {
                 String latitude = ((TextView) view.findViewById(R.id.latitude)).getText().toString();
                 String longitude = ((TextView) view.findViewById(R.id.longitude)).getText().toString();
 
-
                 DetailFragment nextFrag = new DetailFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("depth", depth);
@@ -153,7 +152,6 @@ public class OfficialHistoryContentFragment extends Fragment {
                     Log.i("XML ERROR", response.errorBody().toString());
                 }
                 EventManager.registerEvent(Constants.GET_INPRES_DATA_FINISHED);
-
             }
 
             @Override

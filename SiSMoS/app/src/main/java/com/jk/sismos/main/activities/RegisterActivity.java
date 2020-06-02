@@ -2,7 +2,6 @@ package com.jk.sismos.main.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -126,10 +125,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void sendRegister(String name, String surname, String dni, String email, String password) {
-        if(DeviceUtils.isDeviceOnline(this)) {
+        if (DeviceUtils.isDeviceOnline(this)) {
             Request request = new Request();
             request.sendRegister(name, surname, dni, email, password);
-        } else{
+        } else {
             Toast.makeText(this, "No hay internet", Toast.LENGTH_SHORT).show();
         }
     }
