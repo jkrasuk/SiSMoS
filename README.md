@@ -11,6 +11,4 @@ La propuesta consiste en un sistema de señalización de movimientos sísmicos o
 
 Una vez que se detecta un cierto nivel de movimiento, comenzará a sonar una alarma al máximo volumen posible. Además, se mostrará por pantalla una serie de indicaciones simples y necesarias hasta que finalice el movimiento. Después de que el mismo finalice, la pantalla de bienvenida se vuelve a mostrar nuevamente. Si se desea, se podrá visualizar en la pantalla de historial de alarmas el tipo de movimiento que ocurrió, así como la fecha y hora de comienzo.
 
-Además de la funcionalidad de detección, también se incorpora una pantalla de configuración, en la cual será posible determinar el sonido de alarma deseado (dada una lista) y la posición manual (la misma en primera instancia se detectará utilizando el GPS, pero en caso de que el usuario deseé, puede determinar otra).
-
 Por último, se integra una funcionalidad que permite consultar los movimientos sísmicos reportados por el INPRES (Instituto Nacional de Prevención Sísmica), obteniendo los datos del sitio web. Al pulsar uno de estos sismos, se mostrará información como localización en el mapa, cantidad de Km. entre el epicentro del evento y la ubicación actual (o la establecida manualmente), profundidad del evento, magnitud, latitud y longitud, así como la fecha y hora.
